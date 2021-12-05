@@ -1,0 +1,23 @@
+<configuration debug="false">
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>[%level] %logger{1}:%line - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="org.dcu.student.sem1.ca642.utils.MathUtils" level="info" additivity="false">
+        <appender-ref ref="STDOUT"/>
+    </logger>
+    <logger name="org.dcu.student.sem1.ca642.primes.naive.BruteForce" level="warn" additivity="false">
+        <appender-ref ref="STDOUT"/>
+    </logger>
+    <logger name="org.dcu.student.sem1.ca642.factorization.Naive" level="warn" additivity="false">
+        <appender-ref ref="STDOUT"/>
+    </logger>
+
+    <root level="debug">
+        <appender-ref ref="STDOUT"/>
+    </root>
+
+</configuration>
