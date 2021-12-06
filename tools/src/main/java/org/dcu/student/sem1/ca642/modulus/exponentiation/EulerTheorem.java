@@ -10,7 +10,6 @@ import static org.dcu.student.sem1.ca642.primes.EulerTotient.phi;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class EulerTheorem {
 
-
     public static int apply(final int exponent, final int modulus) {
 
         final int phi = phi(modulus);

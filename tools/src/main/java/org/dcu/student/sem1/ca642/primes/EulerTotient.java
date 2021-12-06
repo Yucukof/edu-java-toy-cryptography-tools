@@ -19,6 +19,7 @@ public class EulerTotient {
 
     public static int phi(final int n) {
         log.info("Calculating phi({})", n);
+
         if (isPrime(n)) {
             return phiPrime(n);
         }
