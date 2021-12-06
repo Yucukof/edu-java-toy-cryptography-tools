@@ -27,7 +27,7 @@ public class SquareAndMultiply {
         }
 
         final int simpleBase = base % modulus;
-        if (simpleBase != base) {
+        if (simpleBase < base) {
             log.debug("Simplifying base...");
             return power(simpleBase, exponent, modulus);
         } else {
