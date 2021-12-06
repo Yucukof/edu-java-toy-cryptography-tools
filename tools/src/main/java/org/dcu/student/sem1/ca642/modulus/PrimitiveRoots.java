@@ -7,16 +7,14 @@ import org.dcu.student.sem1.ca642.factorization.Factor;
 import org.dcu.student.sem1.ca642.primes.naive.BruteForce;
 
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static org.dcu.student.sem1.ca642.utils.MathUtils.power;
-import static org.dcu.student.sem1.ca642.primes.EulerTotient.phi;
 import static org.dcu.student.sem1.ca642.factorization.SmoothNumber.factor;
-import static org.dcu.student.sem1.ca642.primes.Primality.*;
+import static org.dcu.student.sem1.ca642.primes.EulerTotient.phi;
+import static org.dcu.student.sem1.ca642.primes.Primality.isPrimeComposite;
+import static org.dcu.student.sem1.ca642.utils.MathUtils.power;
 
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -27,31 +25,6 @@ public class PrimitiveRoots {
             return 0;
         }
         return phi(modulus - 1);
-    }
-
-    public static int order(final int base, final int modulus) {
-        log.info("Computing order of {} for {}", modulus, base);
-        final int result = generate(base, modulus).size();
-        log.info("Result = [{}]", result);
-        return result;
-    }
-
-    public static Set<Integer> generate(final int base, final int modulus) {
-        log.info("Generating subset of Z^*_{} from {}", modulus, base);
-        if (!isCoPrimes(base, modulus)) {
-            throw new IllegalArgumentException(String.format("%s and %s are not relatively primes!", base, modulus));
-        }
-
-        final Set<Integer> part = new HashSet<>();
-
-        int power = 1;
-        for (int i = 0; i < modulus; i++) {
-            final int value = power % modulus;
-            part.add(value);
-            power *= base;
-        }
-        log.info("Result = {}", part);
-        return part;
     }
 
     public static List<Integer> getPrimitiveRoots(final int modulus) {
