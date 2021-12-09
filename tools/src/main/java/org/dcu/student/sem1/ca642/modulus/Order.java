@@ -8,11 +8,18 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static org.dcu.student.sem1.ca642.primes.EulerTotient.phi;
 import static org.dcu.student.sem1.ca642.primes.Primality.isCoPrimes;
 
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Order {
+
+    public static boolean isPrimitiveRoot(final int value, final int modulus) {
+        final int phi = phi(modulus);
+        final int order = compute(value, modulus);
+        return order == phi;
+    }
 
     public static int compute(final int base, final int modulus) {
         log.info("Computing order of {} for {}", modulus, base);

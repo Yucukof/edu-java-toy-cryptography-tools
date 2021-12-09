@@ -11,8 +11,8 @@ public class PrimitiveRootsTest {
 
     @Test
     public void given_modulus_17_and_base_2_when_isPrimitiveRoot_then_expect_false() {
-        assertThat(isPrimitiveRoot(2, 17))
-              .isFalse();
+        assertThat(isPrimitiveRoot(2, 19))
+              .isTrue();
     }
 
     @Test

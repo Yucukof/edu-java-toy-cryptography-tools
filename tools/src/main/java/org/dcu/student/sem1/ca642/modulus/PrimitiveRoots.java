@@ -69,9 +69,7 @@ public class PrimitiveRoots {
         log.info("Computing if {} is a primitive root of {}", base, modulus);
 
         if (!isPrimeComposite(modulus)) {
-            log.debug("{} has no primitive root.", modulus);
-            log.info("Result = [false]");
-            return false;
+            return Order.isPrimitiveRoot(base, modulus);
         }
 
         final int phi = phi(modulus);

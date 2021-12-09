@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.dcu.student.sem1.ca642.modulus.Order.compute;
+import static org.dcu.student.sem1.ca642.modulus.Order.isPrimitiveRoot;
 
 public class OrderTest {
 
@@ -27,4 +28,15 @@ public class OrderTest {
               .isEqualTo(6);
     }
 
+    @Test
+    public void given_root_value_and_modulus_when_isPrimitiveRoot_then_expect_true(){
+        assertThat(isPrimitiveRoot(3,7))
+              .isTrue();
+    }
+
+    @Test
+    public void given_non_root_value_and_modulus_when_isPrimitiveRoot_then_expect_false(){
+        assertThat(isPrimitiveRoot(2,7))
+              .isFalse();
+    }
 }

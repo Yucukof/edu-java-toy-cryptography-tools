@@ -21,7 +21,7 @@ public class MillerRabin {
     private static final Random rd = new Random();
 
     public static boolean isPseudoPrime(final int n, final int k) {
-        log.info("Checking it {} is a pseudoprime...", n);
+        log.info("Checking it {} is a pseudo-prime...", n);
 
         final Composition composition = getComposition(n - 1);
 
@@ -39,7 +39,7 @@ public class MillerRabin {
     }
 
     public static Composition getComposition(final int n) {
-        log.debug("Computing m value...");
+        log.debug("Computing m value from {}...", n);
         if (n % 2 != 0) {
             throw new IllegalArgumentException(String.format("%s is not an even number!", n));
         }
@@ -66,7 +66,7 @@ public class MillerRabin {
         final int root = power(base, remainder, n);
 
         // Either a^m == 1 (mod n)
-        // Or a^(2^0 * m) == -1 (mod n)
+        // Or a^m == -1 (mod n)
         if (root == 1 || root == n - 1) {
             log.debug("{}^{} (mod {}) = [{}]", base, remainder, n, root);
             return false;
@@ -78,8 +78,9 @@ public class MillerRabin {
             value *= value;
             value %= n;
 
+            // Check the intermediate value
             if (value == 1) {
-                // There is a value (a^m)^(2^k) == 1 (mod n), for which one of the root is not int {1,-1}
+                // There is a value (a^m)^(2^k) == 1 (mod n), for which one of the root is not in {1,-1}
                 // Thus, n cannot be prime
                 // STRONG WITNESS
                 log.debug("({}^{})^(2^{})) (mod {}) = {}", base, remainder, j, n, value);
@@ -96,21 +97,23 @@ public class MillerRabin {
     }
 
     public static List<Integer> getWitnesses(final int n) {
-        return IntStream.range(1, n)
-              .filter(a -> isWitness(a, n))
-              .boxed()
-              .collect(Collectors.toList());
+        final List<Integer> witnesses = IntStream.range(1, n).filter(a -> isWitness(a, n)).boxed().collect(Collectors.toList());
+        log.debug("Witnesses : {}", witnesses);
+        return witnesses;
     }
 
     public static boolean isWitness(final int base, final int n) {
         return isWitness(base, getComposition(n - 1));
     }
 
+    public static boolean isLiar(final int base, final int n) {
+        return !isWitness(base, n);
+    }
+
     public static List<Integer> getLiars(final int n) {
-        return IntStream.range(1, n)
-              .filter(a -> !isWitness(a, n))
-              .boxed()
-              .collect(Collectors.toList());
+        final List<Integer> liars = IntStream.range(1, n).filter(a -> !isWitness(a, n)).boxed().collect(Collectors.toList());
+        log.debug("Liars = {}", liars);
+        return liars;
     }
 
     @Data

@@ -1,6 +1,7 @@
-package org.dcu.student.sem1.ca642.asymmetric;
+package org.dcu.student.sem1.ca642.asymmetric.encryption;
 
 
+import org.dcu.student.sem1.ca642.asymmetric.encryption.Rabin;
 import org.junit.Test;
 
 import java.util.List;

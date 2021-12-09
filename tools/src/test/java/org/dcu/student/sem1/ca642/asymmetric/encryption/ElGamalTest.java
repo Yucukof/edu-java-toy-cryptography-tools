@@ -1,7 +1,8 @@
-package org.dcu.student.sem1.ca642.asymmetric;
+package org.dcu.student.sem1.ca642.asymmetric.encryption;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
+import org.dcu.student.sem1.ca642.asymmetric.encryption.ElGamal;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

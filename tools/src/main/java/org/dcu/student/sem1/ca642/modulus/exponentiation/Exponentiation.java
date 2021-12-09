@@ -16,6 +16,14 @@ public class Exponentiation {
     int exponent;
     int modulus;
 
+    public static Exponentiation from(final int base, final int exponent, final int modulus) {
+        return builder()
+              .base(base)
+              .exponent(exponent)
+              .modulus(modulus)
+              .build();
+    }
+
     public boolean hasPrimeModulus() {
         return isPrime(modulus);
     }
@@ -46,4 +54,8 @@ public class Exponentiation {
               : ChineseRemainder.power(base, exponent, modulus);
     }
 
+    @Override
+    public String toString() {
+        return base + "^" + exponent + " (mod " + modulus + ")";
+    }
 }

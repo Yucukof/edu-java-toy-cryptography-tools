@@ -1,4 +1,4 @@
-package org.dcu.student.sem1.ca642.asymmetric;
+package org.dcu.student.sem1.ca642.asymmetric.encryption;
 
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;

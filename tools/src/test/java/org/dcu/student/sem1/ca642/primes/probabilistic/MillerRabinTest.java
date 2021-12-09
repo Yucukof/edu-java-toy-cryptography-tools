@@ -2,8 +2,6 @@ package org.dcu.student.sem1.ca642.primes.probabilistic;
 
 import org.assertj.core.api.Assertions;
 import org.assertj.core.api.AssertionsForClassTypes;
-import org.dcu.student.sem1.ca642.primes.probabilistic.MillerRabin;
-import org.dcu.student.sem1.ca642.primes.probabilistic.SolovayStrassen;
 import org.junit.Test;
 
 import java.util.List;
@@ -15,12 +13,18 @@ public class MillerRabinTest {
 
     @Test
     public void given_non_prime_number_and_strong_liar_when_isWitness_then_expect_false() {
-        AssertionsForClassTypes.assertThat(isWitness(14, 15)).isFalse();
+        AssertionsForClassTypes.assertThat(isWitness(14, 15))
+              .isFalse();
+        AssertionsForClassTypes.assertThat(isLiar(14, 15))
+              .isTrue();
     }
 
     @Test
     public void given_non_prime_number_and_witness_when_isWitness_then_expect_true() {
-        AssertionsForClassTypes.assertThat(isWitness(12, 15)).isTrue();
+        AssertionsForClassTypes.assertThat(isWitness(12, 15))
+              .isTrue();
+        AssertionsForClassTypes.assertThat(isLiar(12, 15))
+              .isFalse();
     }
 
     @Test
