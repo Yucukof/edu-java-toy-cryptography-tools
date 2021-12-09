@@ -1,6 +1,5 @@
 package org.dcu.student.sem1.ca642.modulus.exponentiation;
 
-import org.dcu.student.sem1.ca642.modulus.exponentiation.EulerTheorem;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

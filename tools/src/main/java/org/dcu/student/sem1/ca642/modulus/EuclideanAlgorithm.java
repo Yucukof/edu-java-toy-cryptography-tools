@@ -8,22 +8,21 @@ import lombok.extern.slf4j.Slf4j;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class EuclideanAlgorithm {
 
-
     public static boolean isCoPrimes(final int a, final int b) {
-        log.info("Computing if {} is relatively prime to {}", a, b);
+        log.info("Checking if {} is relatively prime to {}...", a, b);
         final boolean result = gcd(a, b) == 1;
-        log.info("Result =[{}]", result);
+        log.info("Result = [{}]", result);
         return result;
     }
 
     public static int gcd(final int a, final int b) {
-        log.info("Computing GCD of {} and {}", a, b);
+        log.info("Computing GCD of {} and {}...", a, b);
         int high = Math.max(a, b);
         int low = Math.min(a, b);
 
         while (low > 0) {
             final int remainder = high % low;
-            log.debug("{} (mod {}) = {}", high, low, remainder);
+            log.debug("{} - {} = {}", high, low, remainder);
             if (remainder < low) {
                 high = low;
             }

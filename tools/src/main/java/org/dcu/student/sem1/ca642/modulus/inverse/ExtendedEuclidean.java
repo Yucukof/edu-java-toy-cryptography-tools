@@ -1,4 +1,4 @@
-package org.dcu.student.sem1.ca642.modulus;
+package org.dcu.student.sem1.ca642.modulus.inverse;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -10,6 +10,8 @@ import org.apache.commons.lang3.tuple.Pair;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.dcu.student.sem1.ca642.modulus.EuclideanAlgorithm.isCoPrimes;
+
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ExtendedEuclidean {
@@ -20,9 +22,9 @@ public class ExtendedEuclidean {
     public static int inverse(final int value, final int modulus) {
 
         log.info("Computing inverse of {} modulus {}", value, modulus);
-        if (modulus == value) {
-            throw new IllegalArgumentException("Left and right arguments are identical");
-        }
+
+        validateInput(value, modulus);
+
         final Context context = new Context(modulus, value);
 
         final int result;
@@ -33,6 +35,25 @@ public class ExtendedEuclidean {
         }
         log.info("Result = [{}]", result);
         return result;
+    }
+
+    private static void validateInput(final int value, final int modulus) {
+
+        if (value == 0 || modulus == 0) {
+            throw new IllegalArgumentException("One of the arguments is zero");
+        }
+
+        if (value < 0 || modulus < 0) {
+            throw new IllegalArgumentException("One of the arguments is negative");
+        }
+
+        if (modulus == value) {
+            throw new IllegalArgumentException("Left and right arguments are identical");
+        }
+
+        if (!isCoPrimes(value, modulus)) {
+            throw new IllegalArgumentException(String.format("%s and %s are not relatively primes", value, modulus));
+        }
     }
 
     private static int inverse(final int x, final int y, final Context context) {
@@ -63,9 +84,12 @@ public class ExtendedEuclidean {
         }
     }
 
-    public static int positiveInverse(final Integer factor, final int bigN) {
-        final int inverse = inverse(bigN, factor);
-        return (inverse > 0) ? inverse : factor + inverse;
+    public static int positiveInverse(final int value, final int modulus) {
+        log.info("Computing positive {}⁻¹ (mod {})...", value, modulus);
+        final int inverse = inverse(value, modulus);
+        final int result = (modulus + inverse) % modulus;
+        log.info("Positive inverse = [{}]", result);
+        return result;
     }
 
     @Builder

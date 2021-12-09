@@ -3,11 +3,10 @@ package org.dcu.student.sem1.ca642.modulus.exponentiation;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.dcu.student.sem1.ca642.modulus.exponentiation.SquareAndMultiply;
 
 import java.util.List;
 
-import static org.dcu.student.sem1.ca642.modulus.ExtendedEuclidean.positiveInverse;
+import static org.dcu.student.sem1.ca642.modulus.inverse.ExtendedEuclidean.positiveInverse;
 import static org.dcu.student.sem1.ca642.factorization.Naive.toNonPrimesFactors;
 
 @Slf4j
@@ -15,7 +14,7 @@ import static org.dcu.student.sem1.ca642.factorization.Naive.toNonPrimesFactors;
 public class ChineseRemainder {
 
     public static int power(final int base, final int exponent, final int modulus) {
-        log.info("Computing {}^{} (mod {}) with CRT...", base, exponent, modulus);
+        log.info("Computing {}^{} (mod {})...", base, exponent, modulus);
 
         final List<Integer> factors = toNonPrimesFactors(modulus);
         log.debug("CRT Factors = {}", factors);
@@ -63,7 +62,7 @@ public class ChineseRemainder {
     public static int y(final Integer factor, final int bigN) {
         log.debug("Computing y = N⁻¹ (mod factor)...");
 
-        final int y = positiveInverse(factor, bigN);
+        final int y = positiveInverse(bigN, factor);
         log.debug("y == {}⁻¹ == {} (mod {})", bigN, y, factor);
 
         return y;
