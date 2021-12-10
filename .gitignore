@@ -44,3 +44,5 @@ hs_err_pid*
 
 /lib/
 /cmake-build-debug/
+
+tools/target/
