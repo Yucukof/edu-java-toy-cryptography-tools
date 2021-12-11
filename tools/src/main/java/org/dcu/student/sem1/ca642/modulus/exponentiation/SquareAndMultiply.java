@@ -48,7 +48,7 @@ public class SquareAndMultiply {
             return simpleBase;
         }
 
-        return multiplyAndSquare(simpleBase, simpleExponent, modulus);
+        return squareAndMultiply(simpleBase, simpleExponent, modulus);
     }
 
     public static int multiplyAndSquare(final int base, final int exponent, final int modulus) {

@@ -5,12 +5,11 @@ import lombok.Builder;
 import lombok.NoArgsConstructor;
 import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
+import org.dcu.student.sem1.ca642.modulus.exponentiation.Exponentiation;
 import org.dcu.student.sem1.ca642.modulus.roots.SquareRoot;
 import org.dcu.student.sem1.ca642.modulus.roots.SquareRootComposite;
 
 import java.util.Set;
-
-import static org.dcu.student.sem1.ca642.modulus.exponentiation.SquareAndMultiply.squareAndMultiply;
 
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -39,6 +38,10 @@ public class Rabin {
             this.q = q;
         }
 
+        public static PrivateKey from(final int p, final int q) {
+            return new PrivateKey(p, q);
+        }
+
         public Set<Integer> decrypt(final int c) {
 
             log.info("Decrypting {}", c);
@@ -55,10 +58,8 @@ public class Rabin {
         public PublicKey getPublicKey() {
             log.debug("n = p x q");
             final int n = p * q;
-            log.debug("{} x {} = {}", p, q, n);
-            return PublicKey.builder()
-                  .n(n)
-                  .build();
+            log.debug("{} x {} = {}\n", p, q, n);
+            return PublicKey.from(n);
         }
 
         public boolean isValid() {
@@ -77,6 +78,12 @@ public class Rabin {
          */
         int n;
 
+        private static PublicKey from(final int n) {
+            return builder()
+                  .n(n)
+                  .build();
+        }
+
         /**
          * Encrypts a plaintext $m$ using the public key $n$ as $c=(m^2)\pmod{n}$.
          *
@@ -86,7 +93,7 @@ public class Rabin {
         public int encrypt(final int m) {
             log.info("Encrypting message m [{}]...", m);
             log.info("Calculating m²(mod n)");
-            final int result = squareAndMultiply(m, 2, n);
+            final int result = Exponentiation.compute(m, 2, n);
             log.debug("{}^2 (mod {})={}", m, n, result);
             return result;
         }

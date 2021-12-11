@@ -22,11 +22,11 @@ public enum JacobiSymbol {
     }
 
     public static JacobiSymbol resolve(final int a, final int p) {
-        log.info("Computing Jacobi's Symbol ({}/{})", a, p);
+        log.info("Resolving Jacobi's Symbol ({}/{})...", a, p);
         final int value = compute(a, p);
-        log.info("Jacobi's Value = [{}]", value);
+        log.debug("Jacobi's Value = [{}]", value);
         final JacobiSymbol symbol = resolve(value);
-        log.info("Jacobi's Symbol = [{}]", symbol);
+        log.info("Jacobi's Symbol = [{}]\n", symbol);
         return symbol;
     }
 

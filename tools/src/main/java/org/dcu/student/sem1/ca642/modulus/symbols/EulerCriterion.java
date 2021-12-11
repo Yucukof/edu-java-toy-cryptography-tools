@@ -20,7 +20,13 @@ public enum EulerCriterion {
     }
 
     public static EulerCriterion resolve(final int a, final int p) {
-        return resolve(compute(a, p));
+        log.info("Resolving Euler's Criterion ({}/{})...", a, p);
+
+        final int value = compute(a, p);
+        log.debug("Euler's Criterion value = [{}]", value);
+        final EulerCriterion symbol = resolve(value);
+        log.info("Euler's Criterion = [{}]\n",symbol);
+        return symbol;
 
     }
 
@@ -31,8 +37,7 @@ public enum EulerCriterion {
               .orElse(QUADRATIC_NON_RESIDUE);
     }
 
-    public static int compute(final int a, final int p) {
-        log.info("Calculating Euler's Criterion ({}/{})...", a, p);
+    private static int compute(final int a, final int p) {
 
         if (!isPrime(p)) {
             throw new IllegalArgumentException(String.format("Prime p=%s is not a valid prime!", p));
@@ -49,7 +54,6 @@ public enum EulerCriterion {
 
         log.debug("({}^{({}-1)/2} (mod {})={}", a, p, p, result);
 
-        log.info("Result = [{}]", result);
         return result;
     }
 

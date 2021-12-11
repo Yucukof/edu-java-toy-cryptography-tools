@@ -26,13 +26,13 @@ public enum LegendreSymbol {
     }
 
     public static LegendreSymbol resolve(final int a, final int p) {
-        log.info("Resolving ({}/{})...", a, p);
+        log.info("Resolving Legendre's Symbol ({}/{})...", a, p);
 
         final int value = compute(a, p);
-        log.debug("({}/{}) = {}", a, p, value);
+        log.debug("Legendre's value = {}", value);
 
         final LegendreSymbol symbol = resolve(value);
-        log.info("Symbol = [{}]", symbol.name());
+        log.info("Legendre's Symbol = [{}]\n", symbol.name());
 
         return symbol;
     }
