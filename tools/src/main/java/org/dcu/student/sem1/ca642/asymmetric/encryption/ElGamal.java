@@ -2,6 +2,7 @@ package org.dcu.student.sem1.ca642.asymmetric.encryption;
 
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
+import org.dcu.student.sem1.ca642.modulus.exponentiation.Exponentiation;
 
 import java.util.Random;
 
@@ -45,6 +46,14 @@ public class ElGamal {
          */
         private final int exponent;
 
+        public static PrivateKey from(final int p, final int g, final int x) {
+            return builder()
+                  .prime(p)
+                  .generator(g)
+                  .exponent(x)
+                  .build();
+        }
+
         /**
          * Decrypt a given ciphertext c back to its original plaintext m.
          *
@@ -64,28 +73,31 @@ public class ElGamal {
 
             log.info("Calculating exponent (p-1-x)...");
             final int exponent = p - 1 - x;
-            log.debug("{}-1-{}={}", p, x, exponent);
+            log.debug("{} - 1 - {} = {}", p, x, exponent);
 
             log.info("Calculating c_1^(p-1-x) (mod p)...");
-            log.debug("NB: c_1^(p-1-x)\\equiv c_1^{-x}");
-            final int c1_ = power(c1, exponent, p);
-            log.debug("{}^{} (mod {}) = {}", c1, exponent, p, c1_);
+            // NB : c_1^(p-1-x)\\equiv c_1^{-x}
+            final int c1_ = Exponentiation.compute(c1, exponent, p);
+            log.debug("c^{-x} = {}^{} (mod {}) = {}", c1, exponent, p, c1_);
 
-            log.info("Calculating m = c1^(-x)*c2 (mod p)...");
+            log.info("Calculating m = c1^(-x) x c2 (mod p)...");
             final int m = (c1_ * c2) % p;
-            log.debug("({}*{}) (mod {})={}", c1_, c2, p, m);
+            log.debug("m = ({} x {}) (mod {}) = {}", c1_, c2, p, m);
 
             log.info("Plaintext m = {}", m);
             return m;
         }
 
         public PublicKey getPublicKey() {
+            log.info("Generating public key...");
             final int y = power(generator, exponent, prime);
-            return PublicKey.builder()
-                  .prime(prime)
-                  .generator(generator)
-                  .value(y)
-                  .build();
+            log.info("y = {}^{} (mod {}) = [{}]", generator, exponent, prime, y);
+            return PublicKey.from(generator, prime, y);
+        }
+
+        @Override
+        public String toString() {
+            return "( y = " + exponent + ")";
         }
     }
 
@@ -114,6 +126,14 @@ public class ElGamal {
          */
         private final int value;
 
+        private static PublicKey from(final int generator, final int prime, final int y) {
+            return builder()
+                  .prime(prime)
+                  .generator(generator)
+                  .value(y)
+                  .build();
+        }
+
         /**
          * Encrypt a given plaintext $m$ into a ciphertext $(c1||c2)$.
          *
@@ -132,19 +152,19 @@ public class ElGamal {
             final int g = generator;
             final int y = value;
 
-            log.info("Calculating  y^k (mod p)...");
-            final int yk = power(y, k, p);
-            log.debug("{}^{} (mod {})={}", y, k, p, yk);
-
             log.info("Calculating C1 = g^k (mod p)...");
-            final int c1 = power(g, k, p);
-            log.debug("{}^{} (mod {})={}", g, k, p, c1);
+            final int c1 = Exponentiation.compute(g, k, p);
+            log.debug("C1 = {}^{} (mod {}) = {}", g, k, p, c1);
+
+            log.info("Calculating  y^k (mod p)...");
+            final int yk = Exponentiation.compute(y, k, p);
+            log.debug("y^k = {}^{} (mod {}) = {}", y, k, p, yk);
 
             log.info("Calculating C2 = my^k (mod p)...");
             final int c2 = (m * yk) % p;
-            log.debug("{}x{} (mod {})={}", m, yk, p, c2);
+            log.debug("C2 = {} x ({}^{}) (mod {}) = {}", m, y, k, p, c2);
 
-            log.info("Ciphertext c = ({}||{})", c1, c2);
+            log.info("Ciphertext c = [({}||{})]", c1, c2);
             return new Ciphertext(c1, c2);
         }
 
@@ -174,6 +194,11 @@ public class ElGamal {
                 k = rd.nextInt();
             } while (k <= 0 || k >= p);
             return k;
+        }
+
+        @Override
+        public String toString() {
+            return "(p = " + prime + ", g = " + generator + ", y = " + value + ")";
         }
     }
 }

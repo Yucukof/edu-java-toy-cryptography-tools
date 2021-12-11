@@ -14,8 +14,20 @@ public class Inverse {
     int value;
     int modulus;
 
+    public static int compute(final int value, final int modulus) {
+        return from(value, modulus)
+              .resolve();
+    }
+
     public int resolve() {
         return positiveInverse(value, modulus);
+    }
+
+    public static Inverse from(final int value, final int modulus) {
+        return builder()
+              .value(value)
+              .modulus(modulus)
+              .build();
     }
 
     @Override
