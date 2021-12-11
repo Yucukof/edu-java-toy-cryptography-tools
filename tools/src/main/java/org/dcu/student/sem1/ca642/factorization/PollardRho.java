@@ -27,7 +27,9 @@ public class PollardRho {
 
             final List<Integer> factors = factor(n, c, x0);
             if (!factors.isEmpty()) {
-                log.info("{} = [{}]", n, factors.stream().map(Objects::toString).collect(Collectors.joining(" x ")));
+                log.info("{} = [{}]", n, factors.stream()
+                      .map(Objects::toString)
+                      .collect(Collectors.joining(" x ")));
                 return factors;
             }
         } while (true);

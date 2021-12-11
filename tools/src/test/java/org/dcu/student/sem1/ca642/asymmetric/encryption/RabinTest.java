@@ -4,6 +4,7 @@ package org.dcu.student.sem1.ca642.asymmetric.encryption;
 import org.junit.Test;
 
 import java.util.List;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -19,7 +20,7 @@ public class RabinTest {
         assertThat(privateKey).isNotNull();
         assertThat(privateKey.isValid()).isTrue();
 
-        final List<Integer> ms = privateKey.decrypt(16084);
+        final Set<Integer> ms = privateKey.decrypt(16084);
         assertThat(ms)
               .isNotNull()
               .hasSize(4)
@@ -54,7 +55,7 @@ public class RabinTest {
         assertThat(privateKey).isNotNull();
         assertThat(privateKey.isValid()).isTrue();
 
-        final List<Integer> solutions = privateKey.decrypt(37);
+        final Set<Integer> solutions = privateKey.decrypt(37);
         assertThat(solutions)
               .isNotNull()
               .hasSize(4)

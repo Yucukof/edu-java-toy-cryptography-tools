@@ -22,12 +22,16 @@ public enum JacobiSymbol {
     }
 
     public static JacobiSymbol resolve(final int a, final int p) {
-        final int symbol = compute(a, p);
-        return resolve(symbol);
+        log.info("Computing Jacobi's Symbol ({}/{})", a, p);
+        final int value = compute(a, p);
+        log.info("Jacobi's Value = [{}]", value);
+        final JacobiSymbol symbol = resolve(value);
+        log.info("Jacobi's Symbol = [{}]", symbol);
+        return symbol;
     }
 
     public static int compute(int a, final int n) {
-        log.info("Computing Jacobi's Symbol ({}/{})", a, n);
+        log.debug("Computing {}/{}", a, n);
 
         if (a == 0) {
             return isDivisor(a, n);
@@ -66,9 +70,7 @@ public enum JacobiSymbol {
      */
     private static int isDivisor(final int a, final int p) {
         log.debug("{}|{}", a, p);
-        final int symbol = 0;
-        log.info("Jacobi's Symbol = [{}]", symbol);
-        return symbol;
+        return 0;
     }
 
     /**
@@ -99,13 +101,12 @@ public enum JacobiSymbol {
         log.info("{} is not a prime", a);
         log.debug("> Decomposing {} into factors...", a);
         final List<Integer> factors = toPrimeFactors(a);
-        final Integer symbol = factors.stream()
+        log.debug("Factors = {}", factors);
+
+        return factors.stream()
               .map(factor -> compute(factor, n))
               .reduce((s1, s2) -> s1 * s2)
               .orElse(1);
-
-        log.info("Jacobi's Symbol = [{}]", symbol);
-        return symbol;
     }
 
     /**
@@ -122,13 +123,11 @@ public enum JacobiSymbol {
         log.info("{} is not a prime", n);
         log.debug("> Decomposing {} into factors...", n);
         final List<Integer> factors = toPrimeFactors(n);
-        final Integer symbol = factors.stream()
+
+        return factors.stream()
               .map(factor -> compute(a, factor))
               .reduce((s1, s2) -> s1 * s2)
               .orElse(1);
-
-        log.info("Jacobi's Symbol = [{}]", symbol);
-        return symbol;
     }
 
     /**
@@ -144,7 +143,6 @@ public enum JacobiSymbol {
         log.debug("> property 4");
         log.debug("({} / {}) = {}", a, n, a);
 
-        log.info("Jacobi's Symbol = [{}]", a);
         return a;
     }
 
@@ -165,7 +163,6 @@ public enum JacobiSymbol {
         final int symbol = MathUtils.power(-1, exponent);
         log.debug("(-1)^{}={}", exponent, symbol);
 
-        log.info("Jacobi's Symbol = [{}]", symbol);
         return symbol;
     }
 
@@ -184,7 +181,6 @@ public enum JacobiSymbol {
         final int symbol = (n_8 == 1 || n_8 == 7) ? 1 : -1;
         log.debug("{} -> {}", n_8, symbol);
 
-        log.info("Jacobi's Symbol = [{}]", symbol);
         return symbol;
     }
 
@@ -202,8 +198,6 @@ public enum JacobiSymbol {
         log.debug("> Inverting fraction");
         final boolean expAEven = ((a - 1) / 2) % 2 == 0;
         final boolean expNEven = ((n - 1) / 2) % 2 == 0;
-
-        // TODO: 27/11/2021 review
 
         if (expAEven || expNEven) {
             return compute(n, a);

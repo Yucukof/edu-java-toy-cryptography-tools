@@ -41,7 +41,7 @@ public class SolovayStrassen {
 
     public static boolean isWitness(final int a, final int n) {
         final int jacobi = JacobiSymbol.compute(a, n);
-        final int symbol = (jacobi + n) % n;
+        final int symbol = (jacobi + n) % n; // TODO: 11/12/2021 [HBA]: review
         final int witness = getWitness(a, n);
         final boolean result = symbol != witness;
         log.debug("Jacobi Symbol {} {} witness {}", symbol, result ? "!=" : "==", witness);

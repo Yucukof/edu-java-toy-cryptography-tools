@@ -102,7 +102,9 @@ public class PollardP {
 
     public static Integer getM(final int n) {
         log.debug("Computing Least Common Multiple of exponentiated primes factors of {}", n);
-        final List<Integer> terms = getTerms(n).stream().map(Factor::getValue).collect(Collectors.toList());
+        final List<Integer> terms = getTerms(n).stream()
+              .map(Factor::getValue)
+              .collect(Collectors.toList());
         final Integer lcm = MathUtils.lcm(terms);
         log.debug("Result = [{}]", lcm);
         return lcm;

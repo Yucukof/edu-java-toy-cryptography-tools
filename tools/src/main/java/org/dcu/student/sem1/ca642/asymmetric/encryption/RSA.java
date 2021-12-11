@@ -9,9 +9,7 @@ import org.dcu.student.sem1.ca642.modulus.exponentiation.Exponentiation;
 
 import java.util.Random;
 
-import static org.dcu.student.sem1.ca642.modulus.EuclideanAlgorithm.isCoPrimes;
 import static org.dcu.student.sem1.ca642.modulus.inverse.ExtendedEuclidean.inverse;
-import static org.dcu.student.sem1.ca642.primes.EulerTotient.phi;
 
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -33,9 +31,19 @@ public class RSA {
         public PrivateKey(final int p, final int q) {
             this.p = p;
             this.q = q;
-            this.n = product();
-            this.phiN = phi(n);
             this.e = pick();
+            this.n = product();
+            this.phiN = phi();
+            this.d = generate();
+        }
+
+        public PrivateKey(final int p, final int q, final int e) {
+            this.p = p;
+            this.q = q;
+            this.e = e;
+
+            this.n = product();
+            this.phiN = phi();
             this.d = generate();
         }
 
@@ -46,11 +54,11 @@ public class RSA {
             return n;
         }
 
-        private int pick() {
-            log.debug("Picking random e...");
-            final int e = random.nextInt(phiN - 1) + 1;
-            log.debug("Result = [{}]", e);
-            return e;
+        private int phi() {
+            log.info("Computing phi...");
+            final int phi = (p - 1) * (q - 1);
+            log.info("({} -1) x ({} -1) = {}", p, q, phi);
+            return phi;
         }
 
         public int generate() {
@@ -61,13 +69,11 @@ public class RSA {
             return d;
         }
 
-        public PrivateKey(final int p, final int q, final int e) {
-            this.p = p;
-            this.q = q;
-            this.n = product();
-            this.phiN = phi(n);
-            this.e = e;
-            this.d = generate();
+        private int pick() {
+            log.debug("Picking random e...");
+            final int e = random.nextInt(phiN - 1) + 1;
+            log.debug("Result = [{}]", e);
+            return e;
         }
 
         public int decrypt(final int c) {

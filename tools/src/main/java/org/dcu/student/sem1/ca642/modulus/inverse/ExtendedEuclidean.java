@@ -21,7 +21,7 @@ public class ExtendedEuclidean {
      */
     public static int inverse(final int value, final int modulus) {
 
-        log.info("Computing inverse of {} modulus {}", value, modulus);
+        log.info("Computing {}⁻¹ (mod {})...", value, modulus);
 
         validateInput(value, modulus);
 

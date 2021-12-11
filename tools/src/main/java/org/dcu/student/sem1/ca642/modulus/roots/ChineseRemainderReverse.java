@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dcu.student.sem1.ca642.modulus.exponentiation.ChineseRemainder;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,31 +16,22 @@ import static org.dcu.student.sem1.ca642.factorization.Naive.toNonPrimesFactors;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ChineseRemainderReverse {
 
-    public static int squareRoots(final int value, final int modulus) {
-        log.info("Computing SQRT({}) (mod {})", value, modulus);
-        final Component component = Component.builder()
-              .a(value)
-              .modulus(modulus)
-              .build();
-
-        final int result = squareRoots(component);
-        log.info("Result = [{}]", result);
-        return result;
-    }
-
     public static int squareRoots(final Component component) {
 
         final int modulus = component.getModulus();
 
         final List<Integer> factors = toNonPrimesFactors(modulus);
+        final List<Component> components = toFactorComponent(component, factors);
 
-        final List<Component> components = factors.stream()
+        return compute(components, modulus);
+    }
+
+    private static List<Component> toFactorComponent(final Component component, final List<Integer> factors) {
+        return factors.stream()
               .map(factor -> component.toBuilder()
                     .n(factor)
                     .build())
               .collect(Collectors.toList());
-
-        return compute(components, modulus);
     }
 
     private static Integer compute(final List<Component> compo, final int modulus) {
@@ -50,23 +40,6 @@ public class ChineseRemainderReverse {
               .reduce(Integer::sum)
               .map(a -> a % modulus)
               .orElseThrow(RuntimeException::new);
-    }
-
-    public static int squareRoots(final Component... components) {
-
-        final List<Component> componentList = Arrays.stream(components)
-              .collect(Collectors.toList());
-
-        return compute(componentList);
-    }
-
-    private static Integer compute(final List<Component> compo) {
-        final int modulus = compo.stream()
-              .map(Component::getN)
-              .reduce((a, b) -> a * b)
-              .orElseThrow(RuntimeException::new);
-
-        return compute(compo, modulus);
     }
 
     @Builder(toBuilder = true)
@@ -89,26 +62,31 @@ public class ChineseRemainderReverse {
          * @return a x N x (N⁻¹ (mod n)) (mod modulus)
          */
         public int multiply() {
-            log.info("Computing a x N x (N⁻¹ (mod n)) (mod modulus)");
-            log.info("\tn = {}", n);
-            log.info("\ta = {}", a);
+            log.info("Computing a x N x (y (mod n)) (mod modulus)");
+            log.debug("n = {}", n);
+            log.debug("a = {}", a);
             final int bigN = getBigN();
-            final int y = getY();
+            final int y = getY(bigN);
             final int product = ChineseRemainder.multiplication(a, bigN, y, n);
-            log.info("\t({} x {} x {}) == {} (mod {})", a, bigN, y, product, modulus);
+            log.debug("({} x {} x {}) == {} (mod {})", a, bigN, y, product, modulus);
             return product;
 
         }
 
         private int getBigN() {
-            return modulus / n;
+            final int bigN = modulus / n;
+            log.debug("N = {}", bigN);
+            return bigN;
         }
 
         /**
          * @return N⁻¹ (mod n)
+         * @param bigN
          */
-        public int getY() {
-            return ChineseRemainder.y(n, getBigN());
+        public int getY(final int bigN) {
+            final int y = ChineseRemainder.y(n, bigN);
+            log.debug("y = {}", y);
+            return y;
         }
     }
 }

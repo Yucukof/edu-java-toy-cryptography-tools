@@ -16,16 +16,9 @@ public class Exponentiation {
     int exponent;
     int modulus;
 
-    public static Exponentiation from(final int base, final int exponent, final int modulus) {
-        return builder()
-              .base(base)
-              .exponent(exponent)
-              .modulus(modulus)
-              .build();
-    }
-
-    public boolean hasPrimeModulus() {
-        return isPrime(modulus);
+    public static int compute(final int value, final int exponent, final int modulus) {
+        return from(value, exponent, modulus)
+              .resolve();
     }
 
     public int resolve() {
@@ -33,6 +26,14 @@ public class Exponentiation {
         return hasNegativeExponent()
               ? resolveNegativeExponent()
               : resolvePositiveExponent();
+    }
+
+    public static Exponentiation from(final int base, final int exponent, final int modulus) {
+        return builder()
+              .base(base)
+              .exponent(exponent)
+              .modulus(modulus)
+              .build();
     }
 
     public boolean hasNegativeExponent() {
@@ -52,6 +53,10 @@ public class Exponentiation {
         return isPrime(modulus)
               ? SquareAndMultiply.power(base, exponent, modulus)
               : ChineseRemainder.power(base, exponent, modulus);
+    }
+
+    public boolean hasPrimeModulus() {
+        return isPrime(modulus);
     }
 
     @Override

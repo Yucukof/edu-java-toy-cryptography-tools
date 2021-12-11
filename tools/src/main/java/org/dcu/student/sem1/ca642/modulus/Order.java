@@ -43,8 +43,6 @@ public class Order {
         for (int i = 0; i < modulus; i++) {
             power *= base;
             power %= modulus;
-            power += modulus;
-            power %= modulus;
             exponent++;
             part.add(power);
             log.debug("{}^{} (mod {}) = {}", base, exponent, modulus, power);
