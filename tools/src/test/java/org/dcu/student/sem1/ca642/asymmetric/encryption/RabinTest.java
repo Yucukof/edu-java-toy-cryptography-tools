@@ -1,7 +1,6 @@
 package org.dcu.student.sem1.ca642.asymmetric.encryption;
 
 
-import org.dcu.student.sem1.ca642.asymmetric.encryption.Rabin;
 import org.junit.Test;
 
 import java.util.List;
@@ -15,15 +14,12 @@ public class RabinTest {
         final int p = 127;
         final int q = 131;
 
-        final Rabin.RabinPrivateKey privateKey = Rabin.RabinPrivateKey.builder()
-              .p(p)
-              .q(q)
-              .build();
+        final Rabin.PrivateKey privateKey = new Rabin.PrivateKey(p, q);
 
         assertThat(privateKey).isNotNull();
         assertThat(privateKey.isValid()).isTrue();
 
-        final List<Integer> ms = Rabin.decrypt(16084, privateKey);
+        final List<Integer> ms = privateKey.decrypt(16084);
         assertThat(ms)
               .isNotNull()
               .hasSize(4)
@@ -35,19 +31,16 @@ public class RabinTest {
         final int p = 127;
         final int q = 131;
 
-        final Rabin.RabinPrivateKey privateKey = Rabin.RabinPrivateKey.builder()
-              .p(p)
-              .q(q)
-              .build();
+        final Rabin.PrivateKey privateKey = new Rabin.PrivateKey(p, q);
 
         assertThat(privateKey).isNotNull();
         assertThat(privateKey.isValid()).isTrue();
 
-        final Rabin.RabinPublicKey publicKey = privateKey.getPublicKey();
+        final Rabin.PublicKey publicKey = privateKey.getPublicKey();
         assertThat(publicKey).isNotNull();
         assertThat(publicKey.getN()).isEqualTo(16637);
 
-        final long c = Rabin.encrypt(4410, publicKey);
+        final long c = publicKey.encrypt(4410);
         assertThat(c).isEqualTo(16084);
     }
 
@@ -56,19 +49,16 @@ public class RabinTest {
         final int p = 7;
         final int q = 11;
 
-        final Rabin.RabinPrivateKey privateKey = Rabin.RabinPrivateKey.builder()
-              .p(p)
-              .q(q)
-              .build();
+        final Rabin.PrivateKey privateKey = new Rabin.PrivateKey(p, q);
 
         assertThat(privateKey).isNotNull();
         assertThat(privateKey.isValid()).isTrue();
 
-        final List<Integer> solutions = Rabin.decrypt(37, privateKey);
+        final List<Integer> solutions = privateKey.decrypt(37);
         assertThat(solutions)
               .isNotNull()
               .hasSize(4)
-              .contains(24,31,46,53);
+              .contains(24, 31, 46, 53);
     }
 
     @Test
@@ -76,15 +66,12 @@ public class RabinTest {
         final int p = 127;
         final int q = 131;
 
-        final Rabin.RabinPrivateKey privateKey = Rabin.RabinPrivateKey.builder()
-              .p(p)
-              .q(q)
-              .build();
+        final Rabin.PrivateKey privateKey = new Rabin.PrivateKey(p, q);
 
         assertThat(privateKey).isNotNull();
         assertThat(privateKey.isValid()).isTrue();
 
-        final Rabin.RabinPublicKey publicKey = privateKey.getPublicKey();
+        final Rabin.PublicKey publicKey = privateKey.getPublicKey();
         assertThat(publicKey).isNotNull();
         assertThat(publicKey.getN()).isEqualTo(16637);
     }
