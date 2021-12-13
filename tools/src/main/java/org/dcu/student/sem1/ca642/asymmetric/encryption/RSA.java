@@ -17,11 +17,11 @@ import static org.dcu.student.sem1.ca642.modulus.inverse.ExtendedEuclidean.posit
 public class RSA {
 
     private static int translate(final int base, final int exponent, final int modulus) {
-        final int c = Exponentiation
+        final int value = Exponentiation
               .from(base, exponent, modulus)
               .resolve();
-        log.info("Result = [{}]", c);
-        return c;
+        log.debug("{}^{} (mod {}) = {}", base, exponent, modulus, value);
+        return value;
     }
 
     @Value
@@ -63,7 +63,7 @@ public class RSA {
         private int phi() {
             log.info("Computing phi...");
             final int phi = (p - 1) * (q - 1);
-            log.info("phi(n) = ({} -1) x ({} -1) = {}", p, q, phi);
+            log.info("ϕ(n) = ({} -1) x ({} -1) = {}", p, q, phi);
             return phi;
         }
 
@@ -96,7 +96,7 @@ public class RSA {
         public PublicKey getPublicKey() {
             log.debug("Generating public key");
             final PublicKey publicKey = new PublicKey(e, n);
-            log.debug("Result = [{}]\n", publicKey);
+            log.debug("Public Key = [{}]\n", publicKey);
             return publicKey;
         }
 
@@ -131,7 +131,9 @@ public class RSA {
 
         public int encrypt(final int m) {
             log.info("Encrypting {}", m);
-            return RSA.translate(m, e, n);
+            final int c = RSA.translate(m, e, n);
+            log.info("c = [{}]\n", c);
+            return c;
         }
 
         @Override
@@ -148,7 +150,9 @@ public class RSA {
 
         public int decrypt(final int c) {
             log.info("Decrypting {}", c);
-            return RSA.translate(c, e, n);
+            final int m = RSA.translate(c, e, n);
+            log.info("m = [{}]\n", m);
+            return m;
         }
     }
 }

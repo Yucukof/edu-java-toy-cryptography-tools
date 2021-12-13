@@ -4,10 +4,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.dcu.student.sem1.ca642.modulus.EuclideanAlgorithm.gcd;
@@ -45,6 +42,9 @@ public class PollardRho {
         }
 
         final int factor = walk(x0, c, n);
+        if (factor == 0) {
+            return Collections.emptyList();
+        }
         final int complement = n / factor;
 
         return Arrays.asList(factor, complement);
@@ -56,7 +56,7 @@ public class PollardRho {
         int next = x0;
         int current;
 
-        int d;
+        int d = 0;
         do {
             log.debug("Computing X...");
             previous = next(previous, c, n);
@@ -64,9 +64,10 @@ public class PollardRho {
             current = next(next, c, n);
             next = next(current, c, n);
             final int value = (n + next - previous) % n;
+            if (value == 0) break;
             d = gcd(value, n);
             log.debug("{} - {} (mod {}) = {}", next, previous, n, d);
-        } while (d == 1 || d == n);
+        } while (d == 1);
         return d;
     }
 

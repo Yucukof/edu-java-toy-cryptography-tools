@@ -13,11 +13,11 @@ public class Primality {
         log.info("Evaluating relative primality of {} to {}...", a, b);
         final boolean coprimality = (a % b != 0) && (b % a != 0);
         if (coprimality) {
-            log.info("Result = [true]");
+            log.info("{} co-prime {} ? = [true]", a, b);
         } else {
             final boolean a_divides_b = a % b == 0;
             log.debug("{} % {} = 0", a_divides_b ? a : b, a_divides_b ? b : a);
-            log.info("Result = [false]");
+            log.info("{} co-prime {} ? = [false]", a, b);
         }
         return coprimality;
     }

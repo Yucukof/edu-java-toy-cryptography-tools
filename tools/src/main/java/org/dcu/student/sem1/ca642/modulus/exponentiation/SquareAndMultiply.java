@@ -16,30 +16,34 @@ public class SquareAndMultiply {
 
         log.info("Computing {}^{} (mod {})", base, exponent, modulus);
 
+        if (base == 0) {
+            log.info("{}^{} (mod {}) = [0]", base, exponent, modulus);
+            return 0;
+        }
+
         if (exponent == 0) {
-            log.info("Result = [1]");
+            log.info("{}^{} (mod {}) = [1]", base, exponent, modulus);
             return 1;
         }
         if (exponent == 1) {
             final int result = base % modulus;
-            log.info("Result = [{}]", result);
+            log.info("{}^{} (mod {}) = [{}]", base, exponent, modulus, result);
             return result;
         }
 
         final int simpleBase = base % modulus;
         if (simpleBase < base) {
             log.debug("Simplifying base...");
+            log.debug("{} == {} (mod {})", base, simpleBase, modulus);
             return power(simpleBase, exponent, modulus);
-        } else {
-            log.debug("Could not simplify base.");
         }
 
+        log.debug("Simplifying exponent...");
         final int simpleExponent = EulerTheorem.apply(exponent, modulus);
         if (simpleExponent != exponent) {
-            log.debug("Simplifying exponent...");
             return power(simpleBase, simpleExponent, modulus);
         } else {
-            log.debug("Could not simplify exponent.");
+            log.debug("Cannot simplify exponent.");
         }
 
         if (simpleExponent == modulus && isPrime(modulus)) {
@@ -65,39 +69,8 @@ public class SquareAndMultiply {
             }
             power = square(power, modulus);
         }
-        log.info("Result = [{}]", value);
+        log.info("{}^{} (mod {}) = [{}]", base, exponent, modulus, value);
         return value;
-    }
-
-    public static int squareAndMultiply(final int base, final int exponent, final int modulus) {
-
-        log.info("Computing {}^{} (mod {}) using Square&Multiply", base, exponent, modulus);
-        final int[] factors = DecimalToBaseConverter.exponentsBase2(exponent);
-        ArrayUtils.reverse(factors);
-        log.debug("Factors: {}", factors);
-
-        int value = 1;
-        for (final int factor : factors) {
-            value = square(value, modulus);
-            if (factor == 1) {
-                value = multiply(value, base, modulus);
-            }
-        }
-        log.info("Result = [{}]", value);
-        return value;
-    }
-
-    private static int square(final int value, final int modulus) {
-
-        log.debug("SQUARE");
-
-        final int square = value * value;
-        log.debug("{}²\t\t= {}", value, square);
-
-        final int result = square % modulus;
-        log.debug("{} % {}\t= {}", square, modulus, result);
-
-        return result;
     }
 
     private static int multiply(int value, final int base, final int modulus) {
@@ -113,4 +86,34 @@ public class SquareAndMultiply {
         return result;
     }
 
+    private static int square(final int value, final int modulus) {
+
+        log.debug("SQUARE");
+
+        final int square = value * value;
+        log.debug("{}²\t\t= {}", value, square);
+
+        final int result = square % modulus;
+        log.debug("{} % {}\t= {}", square, modulus, result);
+
+        return result;
+    }
+
+    public static int squareAndMultiply(final int base, final int exponent, final int modulus) {
+
+        log.info("Computing {}^{} (mod {}) using Square&Multiply", base, exponent, modulus);
+        final int[] factors = DecimalToBaseConverter.exponentsBase2(exponent);
+        ArrayUtils.reverse(factors);
+        log.debug("Factors: {}", factors);
+
+        int result = 1;
+        for (final int factor : factors) {
+            result = square(result, modulus);
+            if (factor == 1) {
+                result = multiply(result, base, modulus);
+            }
+        }
+        log.info("{}^{} (mod {}) = [{}]", base, exponent, modulus, result);
+        return result;
+    }
 }

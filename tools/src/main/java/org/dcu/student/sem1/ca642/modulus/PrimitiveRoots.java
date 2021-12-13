@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static org.dcu.student.sem1.ca642.factorization.SmoothNumber.factor;
+import static org.dcu.student.sem1.ca642.factorization.Factor.factor;
 import static org.dcu.student.sem1.ca642.primes.EulerTotient.phi;
 import static org.dcu.student.sem1.ca642.primes.Primality.isPrimeComposite;
 import static org.dcu.student.sem1.ca642.utils.MathUtils.power;

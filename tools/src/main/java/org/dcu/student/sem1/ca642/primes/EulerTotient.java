@@ -5,13 +5,15 @@ import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dcu.student.sem1.ca642.factorization.Factor;
 import org.dcu.student.sem1.ca642.factorization.Naive;
-import org.dcu.student.sem1.ca642.factorization.SmoothNumber;
 import org.dcu.student.sem1.ca642.utils.MathUtils;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
-import static org.dcu.student.sem1.ca642.primes.naive.BruteForce.isPrime;
+import static org.dcu.student.sem1.ca642.factorization.Factor.factor;
 import static org.dcu.student.sem1.ca642.primes.Primality.isPrimeComposite;
+import static org.dcu.student.sem1.ca642.primes.naive.BruteForce.isPrime;
 
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -32,28 +34,37 @@ public class EulerTotient {
     private static int phiPrime(final int n) {
         final int result = n - 1;
         log.debug("{} - 1 = {}", n, result);
-        log.info("Result = [{}]", result);
+        log.info("ϕ({}) = [{}]", n, result);
         return result;
     }
 
     private static int phiPrimeComposite(final int n) {
         final List<Integer> factors = Naive.toPrimeFactors(n);
         log.debug("Factors = {}", factors);
+
         final int result = factors.stream()
               .map(p -> p - 1)
               .reduce((a, b) -> a * b)
               .orElseThrow(RuntimeException::new);
+        log.debug("{} = {}", factors.stream().map(Objects::toString).collect(Collectors.joining(" x ")), result);
 
-        log.info("Result = [{}]", result);
+        log.info("ϕ({}) = [{}]", n, result);
         return result;
     }
 
     private static int phiComposite(final int n) {
-        final int result = SmoothNumber.factor(n).stream()
+        final List<Factor> factors = factor(n);
+
+        final List<Integer> terms = factors.stream()
               .map(EulerTotient::computeTerm)
+              .collect(Collectors.toList());
+
+        final int result = terms.stream()
               .reduce((a, b) -> a * b)
               .orElseThrow(RuntimeException::new);
-        log.info("Result = [{}]", result);
+        log.debug("{} = {}", terms.stream().map(Objects::toString).collect(Collectors.joining(" x ")), result);
+
+        log.info("ϕ({}) = [{}]", n, result);
         return result;
     }
 

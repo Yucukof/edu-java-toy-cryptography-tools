@@ -63,7 +63,7 @@ public class DSA {
         }
 
         private static int generateG(final int p, final int q, final int h) {
-            final int exponent = Fraction.compute(p - 1, q, p);
+            final int exponent = Fraction.resolve(p - 1, q, p);
             return Exponentiation.compute(h, exponent, p);
         }
 

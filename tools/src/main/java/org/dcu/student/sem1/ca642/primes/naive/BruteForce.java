@@ -22,13 +22,13 @@ public class BruteForce {
     public static boolean isPrime(final int p) {
         log.info("Evaluating primality of {} by brute-force...", p);
         if (p == 2) {
-            log.info("Result = [true]");
+            log.info("{} prime ? = [true]", p);
             return true;
         }
         final int sqrt = MathUtils.intSqrt(p);
         final boolean isPrime = IntStream.rangeClosed(2, sqrt)
               .noneMatch(i -> p % i == 0);
-        log.info("Result = [{}]", isPrime ? "true" : "false");
+        log.info("{} prime ? = [{}]", p, isPrime ? "true" : "false");
         return isPrime;
     }
 }

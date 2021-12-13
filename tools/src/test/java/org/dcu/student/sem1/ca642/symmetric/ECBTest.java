@@ -1,5 +1,7 @@
 package org.dcu.student.sem1.ca642.symmetric;
 
+import org.dcu.student.sem1.ca642.symmetric.Block;
+import org.dcu.student.sem1.ca642.symmetric.ECB;
 import org.junit.Before;
 import org.junit.Test;
 

@@ -8,6 +8,23 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class RSATest {
 
     @Test
+    public void given_invalid_signature_and_public_key_and_cipher_when_check_then_expect_false() {
+
+        final RSA.PrivateKey privateKey = RSA.PrivateKey.from(3, 11, 17);
+        final RSA.PublicKey publicKey = privateKey.getPublicKey();
+
+        final int m = 29;
+        final int signature = 37;
+
+        final HashFunction hashFunction = new FakeHashFunction();
+
+        final int c = privateKey.encrypt(m);
+
+        final boolean check = publicKey.verify(signature, c, hashFunction);
+        assertThat(check).isFalse();
+    }
+
+    @Test
     public void given_valid_message_and_private_key_when_sign_then_expect_correct_signature() {
 
         final RSA.PrivateKey privateKey = RSA.PrivateKey.from(3, 11, 17);

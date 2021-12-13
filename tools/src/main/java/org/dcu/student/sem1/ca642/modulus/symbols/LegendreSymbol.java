@@ -38,7 +38,7 @@ public enum LegendreSymbol {
     }
 
     private static int compute(int a, final int p) {
-
+        log.debug("Computing {}/{}", a, p);
         if (a == 0) {
             return isDivisor(a, p);
         }

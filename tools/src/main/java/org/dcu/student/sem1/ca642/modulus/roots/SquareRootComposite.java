@@ -28,9 +28,9 @@ public class SquareRootComposite implements SquareRoot {
         this.value = value;
         this.modulus = modulus;
 
-        log.debug("Computing SQRT({}) (mod {})...", value, modulus);
+        log.info("Calculating composite √({}) (mod {})...", value, modulus);
         if (!hasSolution()) {
-            throw new IllegalArgumentException(String.format("SQRT(%s) (mod %s) has not solution", value, modulus));
+            throw new IllegalArgumentException(String.format("√(%s) (mod %s) has not solution", value, modulus));
         }
         this.factors = toPrimeFactors(modulus);
         this.factorRoots = resolveFactors();
@@ -42,9 +42,9 @@ public class SquareRootComposite implements SquareRoot {
         this.value = value;
         this.modulus = multiply(factors);
 
-        log.debug("Computing SQRT({}) (mod {})...", value, modulus);
+        log.debug("Computing composite √({}) (mod {})...", value, modulus);
         if (!hasSolution()) {
-            throw new IllegalArgumentException(String.format("SQRT(%s) (mod %s) has not solution", value, modulus));
+            throw new IllegalArgumentException(String.format("√(%s) (mod %s) has not solution", value, modulus));
         }
         this.factors = toList(factors);
         this.factorRoots = resolveFactors();
@@ -115,7 +115,6 @@ public class SquareRootComposite implements SquareRoot {
         if (index == factors.size()) {
             log.debug("Computing roots with combination {}...", combination);
             final Integer root = computeCompositeRoot(combination);
-            log.debug("Root = [{}]", root);
             return Collections.singleton(root);
         }
 
@@ -137,7 +136,7 @@ public class SquareRootComposite implements SquareRoot {
     private Set<Integer> resolve() {
         log.debug("Computing effective roots...");
         final Set<Integer> roots = mergeFactorRoots(new ArrayList<>());
-        log.info("Roots = [{}]", roots);
+        log.info("Roots = {}", roots);
         return roots;
 
     }
@@ -155,5 +154,10 @@ public class SquareRootComposite implements SquareRoot {
         return Arrays.stream(factors)
               .boxed()
               .collect(Collectors.toList());
+    }
+
+    @Override
+    public String toString() {
+        return "√(" + value + " (mod " + modulus + ")";
     }
 }

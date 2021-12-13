@@ -16,8 +16,8 @@ public class Exponentiation {
     int exponent;
     int modulus;
 
-    public static int compute(final int value, final int exponent, final int modulus) {
-        return from(value, exponent, modulus)
+    public static int compute(final int base, final int exponent, final int modulus) {
+        return from(base, exponent, modulus)
               .resolve();
     }
 
@@ -49,7 +49,7 @@ public class Exponentiation {
         return resolve(base, exponent, modulus);
     }
 
-    private static int resolve(final int base, final int exponent, final int modulus) {
+    public static int resolve(final int base, final int exponent, final int modulus) {
         return isPrime(modulus)
               ? SquareAndMultiply.power(base, exponent, modulus)
               : ChineseRemainder.power(base, exponent, modulus);

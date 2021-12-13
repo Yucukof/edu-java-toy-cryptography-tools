@@ -29,7 +29,7 @@ public class ElGamal {
         log.debug("C2 = {} x ({}^{}) (mod {}) = {}", m, y, k, p, c2);
 
         final Ciphertext ciphertext = new Ciphertext(c1, c2);
-        log.info("Ciphertext c = [{}]\n", ciphertext);
+        log.info("c = [{}]\n", ciphertext);
         return ciphertext;
     }
 
@@ -47,7 +47,7 @@ public class ElGamal {
         final int m = (s * c2) % p;
         log.debug("m = ({} x {}) (mod {}) = {}", s, c2, p, m);
 
-        log.info("Plaintext m = [{}]\n", m);
+        log.info("m = [{}]\n", m);
         return m;
     }
 

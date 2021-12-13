@@ -11,7 +11,7 @@ public class EuclideanAlgorithm {
     public static boolean isCoPrimes(final int a, final int b) {
         log.info("Checking if {} is relatively prime to {}...", a, b);
         final boolean result = gcd(a, b) == 1;
-        log.info("Result = [{}]", result);
+        log.info("{} co-prime {}? = [{}]", a, b, result);
         return result;
     }
 
@@ -19,6 +19,10 @@ public class EuclideanAlgorithm {
         log.info("Computing GCD of {} and {}...", a, b);
         int high = Math.max(a, b);
         int low = Math.min(a, b);
+
+        if (low == 0) {
+            throw new IllegalArgumentException("One of the arguments is zero");
+        }
 
         while (low > 0) {
             final int remainder = high % low;
@@ -28,7 +32,7 @@ public class EuclideanAlgorithm {
             }
             low = remainder;
         }
-        log.info("Result = [{}]", high);
+        log.info("GCD({},{}) = [{}]", a, b, high);
         return high;
     }
 }

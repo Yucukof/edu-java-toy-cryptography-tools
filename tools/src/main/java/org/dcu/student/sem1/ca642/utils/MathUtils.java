@@ -52,7 +52,7 @@ public final class MathUtils {
         final Integer lcm = terms.stream()
               .reduce((a, b) -> a * b)
               .orElseThrow(RuntimeException::new);
-        log.info("Result = [{}]", lcm);
+        log.info("LCM({}) = [{}]", terms, lcm);
         return lcm;
     }
 }

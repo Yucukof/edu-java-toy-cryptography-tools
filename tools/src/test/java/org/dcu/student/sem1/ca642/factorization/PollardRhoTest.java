@@ -9,7 +9,7 @@ public class PollardRhoTest {
 
     @Test
     public void given_non_prime_number2_when_factor_then_expect_correct_factors() {
-        assertThat(factor(209, 1, 1))
+        assertThat(factor(209, 1, 2))
               .isNotNull()
               .hasSize(2)
               .contains(11, 19);

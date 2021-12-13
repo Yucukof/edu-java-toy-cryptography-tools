@@ -10,7 +10,7 @@ public class SmoothNumberTest {
 
     @Test
     public void given_non_prime_number_when_toPrimeComposedFactors_then_expect_correct_factors() {
-        final List<Factor> factors = SmoothNumber.factor(18);
+        final List<Factor> factors = Factor.factor(18);
         assertThat(factors)
               .isNotNull()
               .hasSize(2);

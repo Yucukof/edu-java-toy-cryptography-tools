@@ -27,14 +27,12 @@ public class ExtendedEuclidean {
 
         final Context context = new Context(modulus, value);
 
-        final int result;
-        if (modulus < value) {
-            result = inverse(value, modulus, context);
-        } else {
-            result = inverse(modulus, value, context);
-        }
-        log.info("Result = [{}]", result);
-        return result;
+        final int inverse = modulus < value
+              ? inverse(value, modulus, context)
+              : inverse(modulus, value, context);
+
+        log.info("Inverse = [{}]", inverse);
+        return inverse;
     }
 
     private static void validateInput(final int value, final int modulus) {

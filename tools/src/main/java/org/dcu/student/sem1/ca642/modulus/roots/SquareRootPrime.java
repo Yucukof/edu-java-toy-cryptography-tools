@@ -27,15 +27,15 @@ public class SquareRootPrime implements SquareRoot {
     }
 
     private RootPair resolve() {
-        log.info("Calculating square roots of {} (mod {})...", value, modulus);
+        log.info("Calculating prime √({}) (mod {})...", value, modulus);
         if (!isPrime(modulus)) {
             throw new IllegalStateException(String.format("%s is not a valid prime!", modulus));
         }
         if (!hasSolution()) {
-            throw new IllegalStateException(String.format("SQRT(%s) (mod %s) has no solution!", value, modulus));
+            throw new IllegalStateException(String.format("√(%s) (mod %s) has no solution!", value, modulus));
         }
         final RootPair roots = compute();
-        log.info("Roots = [{}]", roots);
+        log.info("Roots = [{}]\n", roots);
         return roots;
     }
 
@@ -60,7 +60,9 @@ public class SquareRootPrime implements SquareRoot {
 
 
         log.debug("Computing roots...");
-        return p_congruent_3 ? computeRootsModulo3(value, modulus) : computeRootsModulo8(value, modulus);
+        return p_congruent_3
+               ? computeRootsModulo3(value, modulus)
+               : computeRootsModulo8(value, modulus);
 
     }
 
@@ -71,7 +73,7 @@ public class SquareRootPrime implements SquareRoot {
         final int exponent = (p + 1) / 4;
         log.debug("({} + 1) / 4 = {}", p, exponent);
         final int root = power(a, exponent, p);
-        log.debug(" {}^(({} + 1) / 4) == {} (mod {})", a, p, root, p);
+        log.debug("{}^(({} + 1) / 4) == {} (mod {})", a, p, root, p);
 
         return toPair(root);
     }
@@ -142,7 +144,7 @@ public class SquareRootPrime implements SquareRoot {
 
     @Override
     public String toString() {
-        return "sqrt(" + value + ") (mod " + modulus + ") = " + roots;
+        return "√(" + value + ") (mod " + modulus + ") = " + roots;
     }
 
     @Value

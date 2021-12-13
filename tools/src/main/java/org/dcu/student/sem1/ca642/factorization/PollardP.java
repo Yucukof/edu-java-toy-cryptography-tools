@@ -106,7 +106,7 @@ public class PollardP {
               .map(Factor::getValue)
               .collect(Collectors.toList());
         final Integer lcm = MathUtils.lcm(terms);
-        log.debug("Result = [{}]", lcm);
+        log.debug("LCM({}) = [{}]", terms, lcm);
         return lcm;
     }
 

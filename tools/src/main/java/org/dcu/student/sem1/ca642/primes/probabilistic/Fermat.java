@@ -21,7 +21,7 @@ public class Fermat {
     public static boolean isPseudoPrime(final int n, final int k) {
         final int phi = phi(n);
         for (int i = 0; i < k; i++) {
-            final int a = rd.nextInt(n);
+            final int a = rd.nextInt(n - 1 )+ 1;
             final boolean witness = isWitness(a, n);
             log.debug("{}^{} (mod {}) = {}", a, phi, n, witness);
             if (witness) {

@@ -48,7 +48,7 @@ public class Naive {
             }
             prime = BruteForce.getNextPrime(prime);
         }
-        log.info("Result = [{} = {}]", n, factors.stream().map(Objects::toString).collect(Collectors.joining("x")));
+        log.info("{} = [{}]", n, factors.stream().map(Objects::toString).collect(Collectors.joining(" x ")));
         return factors;
     }
 
