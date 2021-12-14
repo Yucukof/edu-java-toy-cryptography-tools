@@ -3,7 +3,7 @@ package org.dcu.student.sem1.ca642.modulus.exponentiation;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.dcu.student.sem1.ca642.modulus.exponentiation.ChineseRemainder.power;
+import static org.dcu.student.sem1.ca642.modulus.exponentiation.ChineseRemainder.compute;
 
 public class ChineseRemainderTest {
 
@@ -13,7 +13,7 @@ public class ChineseRemainderTest {
         final int exponent = 37;
         final int modulus = 55;
 
-        final int value = power(base, exponent, modulus);
+        final int value = compute(base, exponent, modulus);
 
         assertThat(value).isEqualTo(47);
     }

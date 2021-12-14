@@ -1,14 +1,14 @@
 package org.dcu.student.sem1.ca642.modulus.symbols;
 
 import lombok.extern.slf4j.Slf4j;
+import org.dcu.student.sem1.ca642.modulus.exponentiation.SquareAndMultiply;
 
 import java.util.Arrays;
 
-import static org.dcu.student.sem1.ca642.modulus.exponentiation.SquareAndMultiply.squareAndMultiply;
 import static org.dcu.student.sem1.ca642.primes.naive.BruteForce.isPrime;
 
 @Slf4j
-public enum EulerCriterion {
+public enum EulerCriterion implements SymbolValue {
 
     QUADRATIC_RESIDUE(1),
     QUADRATIC_NON_RESIDUE(-1);
@@ -25,16 +25,9 @@ public enum EulerCriterion {
         final int value = compute(a, p);
         log.debug("Euler's Criterion value = [{}]", value);
         final EulerCriterion symbol = resolve(value);
-        log.info("Euler's Criterion = [{}]\n",symbol);
+        log.info("Euler's Criterion = [{}]\n", symbol);
         return symbol;
 
-    }
-
-    public static EulerCriterion resolve(final int value) {
-        return Arrays.stream(EulerCriterion.values())
-              .filter(val -> val.matches(value))
-              .findAny()
-              .orElse(QUADRATIC_NON_RESIDUE);
     }
 
     private static int compute(final int a, final int p) {
@@ -50,14 +43,26 @@ public enum EulerCriterion {
         final int exponent = (p - 1) / 2;
 
         log.debug("(a^{(p-1)/2} (mod p)");
-        final int result = squareAndMultiply(a, exponent, p);
+        final int result = SquareAndMultiply.compute(a, exponent, p);
 
         log.debug("({}^{({}-1)/2} (mod {})={}", a, p, p, result);
 
         return result;
     }
 
+    public static EulerCriterion resolve(final int value) {
+        return Arrays.stream(EulerCriterion.values())
+              .filter(val -> val.matches(value))
+              .findAny()
+              .orElse(QUADRATIC_NON_RESIDUE);
+    }
+
     private boolean matches(final int value) {
         return this.value == value;
+    }
+
+    @Override
+    public boolean isQuadraticResidue() {
+        return this == QUADRATIC_RESIDUE;
     }
 }

@@ -6,13 +6,13 @@
         </encoder>
     </appender>
 
-    <logger name="org.dcu.student.sem1.ca642.utils.MathUtils" level="info" additivity="false">
+    <logger name="org.dcu.student.sem1.ca642.utils.MathUtils" level="debug" additivity="false">
         <appender-ref ref="STDOUT"/>
     </logger>
     <logger name="org.dcu.student.sem1.ca642.primes.naive.BruteForce" level="warn" additivity="false">
         <appender-ref ref="STDOUT"/>
     </logger>
-    <logger name="org.dcu.student.sem1.ca642.factorization.Naive" level="warn" additivity="false">
+    <logger name="org.dcu.student.sem1.ca642.factorization.Naive" level="debug" additivity="false">
         <appender-ref ref="STDOUT"/>
     </logger>
 

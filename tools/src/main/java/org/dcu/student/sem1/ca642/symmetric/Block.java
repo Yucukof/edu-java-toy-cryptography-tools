@@ -44,6 +44,12 @@ public class Block {
         return new Block(value);
     }
 
+    static String toBlock(final List<Block> encryptedBlocks) {
+        return encryptedBlocks.stream()
+              .map(Block::getValue)
+              .collect(Collectors.joining());
+    }
+
     public Block decrement() {
         final int decrement = -1;
         return add(decrement);

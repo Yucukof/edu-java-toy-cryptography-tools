@@ -1,9 +1,9 @@
-package org.dcu.student.sem1.ca642.modulus;
+package org.dcu.student.sem1.ca642.primes;
 
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.dcu.student.sem1.ca642.modulus.EuclideanAlgorithm.gcd;
+import static org.dcu.student.sem1.ca642.primes.EuclideanAlgorithm.gcd;
 
 public class EuclideanAlgorithmTest {
 

@@ -3,19 +3,18 @@ package org.dcu.student.sem1.ca642.modulus.exponentiation;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.dcu.student.sem1.ca642.modulus.exponentiation.SquareAndMultiply.power;
 
 public class EulerTheoremTest {
 
     @Test
     public void given_1002_exponent_3755_modulo_10_when_power_then_expect_1() {
-        assertThat(power(1002, 3755, 10))
+        assertThat(Exponentiation.compute(1002, 3755, 10))
               .isEqualTo(8);
     }
 
     @Test
     public void given_9876_exponent_180_modulo_77_when_power_then_expect_1() {
-        assertThat(power(9876, 180, 77))
+        assertThat(Exponentiation.compute(9876, 180, 77))
               .isOne();
     }
 

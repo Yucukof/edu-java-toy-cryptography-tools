@@ -5,6 +5,8 @@ import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -52,6 +54,7 @@ public final class MathUtils {
         final Integer lcm = terms.stream()
               .reduce((a, b) -> a * b)
               .orElseThrow(RuntimeException::new);
+        log.debug("{} = {}", terms.stream().map(Objects::toString).collect(Collectors.joining(" x ")), lcm);
         log.info("LCM({}) = [{}]", terms, lcm);
         return lcm;
     }

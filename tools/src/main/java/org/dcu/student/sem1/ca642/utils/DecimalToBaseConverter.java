@@ -73,7 +73,7 @@ public class DecimalToBaseConverter {
             final String details = IntStream.range(0, exponents.length)
                   .filter(i -> exponents[i] == 1)
                   .mapToObj(i -> String.format("%s^%s", base, i))
-                  .collect(Collectors.joining("+"));
+                  .collect(Collectors.joining(" + "));
 
             log.debug("{} = [{}]", value, details);
         }

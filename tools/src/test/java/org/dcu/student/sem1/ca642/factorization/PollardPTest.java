@@ -17,6 +17,13 @@ public class PollardPTest {
     }
 
     @Test
+    public void given_non_prime_number_with_b_6_when_factor_then_expect_correct_factor() {
+        assertThat(PollardP.guess(247, 6))
+              .isPresent()
+              .hasValue(13);
+    }
+
+    @Test
     public void given_non_prime_number_when_lcm_then_expect_correct_factors() {
         assertThat(getM(5))
               .isEqualTo(60);

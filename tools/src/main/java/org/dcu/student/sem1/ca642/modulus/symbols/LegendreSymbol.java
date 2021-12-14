@@ -13,7 +13,7 @@ import static org.dcu.student.sem1.ca642.primes.naive.BruteForce.isPrime;
  * original pseudo-code and Python code that served to the elaboration of this class.
  */
 @Slf4j
-public enum LegendreSymbol {
+public enum LegendreSymbol implements SymbolValue {
 
     QUADRATIC_RESIDUE(1),
     QUADRATIC_NON_RESIDUE(-1),
@@ -87,6 +87,7 @@ public enum LegendreSymbol {
      */
     private static int property1(final int a, final int p) {
         log.debug("> property 1");
+        log.debug("Simplifying dividend...");
         final int a_p = a % p;
         log.debug("{} == {} (mod {})", a, a_p, p);
         return compute(a_p, p);
@@ -103,15 +104,19 @@ public enum LegendreSymbol {
     private static Integer property2(final int a, final int p) {
         log.debug("> property 2");
         log.debug("{} is not a prime", a);
+        log.debug("Simplifying dividend...");
 
         log.debug("> Decomposing {} into factors...", a);
         final List<Integer> factors = toPrimeFactors(a);
         log.debug("Factors of a = {}", factors);
 
-        return factors.stream()
+        final int symbol = factors.stream()
               .map(factor -> compute(factor, p))
               .reduce((s1, s2) -> s1 * s2)
               .orElse(1);
+
+        log.debug("({} / {}) = {}", a, p, symbol);
+        return symbol;
     }
 
     /**
@@ -141,6 +146,7 @@ public enum LegendreSymbol {
     private static int property4(final int a, final int p) {
         log.debug("> property 4");
         log.debug("{} == {}-1 ( mod {})", a, p, p);
+        log.debug("Checking if {} (mod 4) ∈ {1}", p);
         final int p_4 = p % 4;
         log.debug("{} (mod 4) = {}", p, p_4);
         return (p_4 == 1) ? 1 : -1;
@@ -156,6 +162,7 @@ public enum LegendreSymbol {
      */
     private static int property5(final int a, final int p) {
         log.debug("> property 5");
+        log.debug("Checking if {} (mod 8) ∈ {1,{}}", p, p - 1);
         final int p_8 = p % 8;
         log.debug("{} (mod 8) = {}", p, p_8);
         return (p_8 == 1 || p_8 == 7) ? 1 : -1;
@@ -171,7 +178,7 @@ public enum LegendreSymbol {
      */
     private static int property6(final int a, final int p) {
         log.debug("> property 6");
-        log.debug("{} is a prime", a);
+        log.debug("{} and {} are primes", a, p);
         log.debug("> Inverting fraction");
         final boolean expAEven = ((a - 1) / 2) % 2 == 0;
         final boolean expPEven = ((p - 1) / 2) % 2 == 0;
@@ -190,6 +197,11 @@ public enum LegendreSymbol {
               .filter(val -> val.matches(value))
               .findAny()
               .orElseThrow(RuntimeException::new);
+    }
+
+    @Override
+    public boolean isQuadraticResidue() {
+        return this == QUADRATIC_RESIDUE;
     }
 
     private boolean matches(final int value) {

@@ -5,14 +5,16 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.dcu.student.sem1.ca642.modulus.exponentiation.Exponentiation;
 import org.dcu.student.sem1.ca642.utils.MathUtils;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static org.dcu.student.sem1.ca642.modulus.exponentiation.SquareAndMultiply.power;
 
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -20,21 +22,59 @@ public class MillerRabin {
 
     private static final Random rd = new Random();
 
-    public static boolean isPseudoPrime(final int n, final int k) {
-        log.info("Checking it {} is a pseudo-prime...", n);
+    public static List<Integer> getLiars(final int n) {
+        log.info("Computing liars of {}", n);
+        final List<Integer> liars = IntStream.range(1, n)
+              .filter(a -> !isWitness(a, n))
+              .boxed()
+              .collect(Collectors.toList());
+        log.info("Liars = {}\n", liars);
+        return liars;
+    }
 
-        final Composition composition = getComposition(n - 1);
+    public static boolean isWitness(final int base, final int n) {
+        return isWitness(base, getComposition(n - 1));
+    }
 
-        for (int i = 0; i < k; i++) {
-            final int base = getRandomElement(n);
-            log.debug("Computing witness for base {}", base);
-            final boolean isWitness = isWitness(base, composition);
-            if (isWitness) {
-                log.info("Result = [false]");
+    public static boolean isWitness(final int base, final Composition composition) {
+
+        final int n = composition.getValue() + 1;
+        final int exponent = composition.getExponent();
+        final int remainder = composition.getRemainder();
+        final int root = Exponentiation.compute(base, remainder, n);
+
+        // Either a^m == 1 (mod n)
+        // Or a^m == -1 (mod n)
+        if (root == 1 || root == n - 1) {
+            log.debug("{}^{} (mod {}) = [{}]", base, remainder, n, root);
+            log.info("{} = [LIAR]", base);
+            return false;
+        }
+
+        int value = root;
+        for (int j = 1; j <= exponent; j++) {
+
+            value *= value;
+            value %= n;
+
+            // Check the intermediate value
+            if (value == 1) {
+                // There is a value (a^m)^(2^k) == 1 (mod n), for which one of the root is not in {1,-1}
+                // Thus, n cannot be prime
+                // STRONG WITNESS
+                log.debug("({}^{})^(2^{})) (mod {}) = {}", base, remainder, j, n, value);
+                log.info("{} = [WITNESS]", base);
+                return true;
+            }
+            if (value == n - 1 && j != exponent) {
+                // There is 1 element (a^m)^(2^s) == -1 (mod n)
+                // Thus, n is possibly a prime
+                // STRONG LIAR
+                log.info("{} = [LIAR]", base);
                 return false;
             }
         }
-        log.info("Result = [true]");
+        log.info("{} = [WITNESS]", base);
         return true;
     }
 
@@ -54,66 +94,60 @@ public class MillerRabin {
         return composition;
     }
 
+    public static List<Integer> getWitnesses(final int n) {
+        log.info("Computing witnesses of {}", n);
+        final List<Integer> witnesses = IntStream.range(1, n)
+              .filter(a -> isWitness(a, n))
+              .boxed()
+              .collect(Collectors.toList());
+        log.info("Witnesses = {}\n", witnesses);
+        return witnesses;
+    }
+
+    public static Optional<Integer> getAnyWitness(final int n) {
+        log.info("Searching any witness for {}...", n);
+        final Optional<Integer> witness = IntStream.range(1, n)
+              .boxed()
+              .filter(a -> isWitness(a, n))
+              .findFirst();
+        log.info("Witness = [{}]", witness.map(Objects::toString).orElse(""));
+        return witness;
+    }
+
+    public static Optional<Integer> getAnyLiar(final int n) {
+        log.info("Searching any liar for {}", n);
+        final Optional<Integer> liar = IntStream.range(2, n)
+              .boxed()
+              .filter(a -> !isWitness(a, n))
+              .findFirst();
+        log.info("Liar = [{}]", liar.map(Objects::toString).orElse(""));
+        return liar;
+    }
+
+    public static boolean isPseudoPrime(final int n, final int k) {
+        log.info("Checking it {} is a pseudo-prime...", n);
+
+        final Composition composition = getComposition(n - 1);
+
+        for (int i = 0; i < k; i++) {
+            final int base = getRandomElement(n);
+            log.debug("Computing witness for base {}", base);
+            final boolean isWitness = isWitness(base, composition);
+            if (isWitness) {
+                log.info("{} prime ? = [false]", n);
+                return false;
+            }
+        }
+        log.info("{} prime ? = [true]", n);
+        return true;
+    }
+
     private static int getRandomElement(final int n) {
         return rd.nextInt(n - 2) + 2;
     }
 
-    public static boolean isWitness(final int base, final Composition composition) {
-
-        final int n = composition.getValue() + 1;
-        final int exponent = composition.getExponent();
-        final int remainder = composition.getRemainder();
-        final int root = power(base, remainder, n);
-
-        // Either a^m == 1 (mod n)
-        // Or a^m == -1 (mod n)
-        if (root == 1 || root == n - 1) {
-            log.debug("{}^{} (mod {}) = [{}]", base, remainder, n, root);
-            return false;
-        }
-
-        int value = root;
-        for (int j = 1; j <= exponent; j++) {
-
-            value *= value;
-            value %= n;
-
-            // Check the intermediate value
-            if (value == 1) {
-                // There is a value (a^m)^(2^k) == 1 (mod n), for which one of the root is not in {1,-1}
-                // Thus, n cannot be prime
-                // STRONG WITNESS
-                log.debug("({}^{})^(2^{})) (mod {}) = {}", base, remainder, j, n, value);
-                return true;
-            }
-            if (value == n - 1 && j != exponent) {
-                // There is 1 element (a^m)^(2^s) == -1 (mod n)
-                // Thus, n is possibly a prime
-                // STRONG LIAR
-                return false;
-            }
-        }
-        return true;
-    }
-
-    public static List<Integer> getWitnesses(final int n) {
-        final List<Integer> witnesses = IntStream.range(1, n).filter(a -> isWitness(a, n)).boxed().collect(Collectors.toList());
-        log.debug("Witnesses : {}", witnesses);
-        return witnesses;
-    }
-
-    public static boolean isWitness(final int base, final int n) {
-        return isWitness(base, getComposition(n - 1));
-    }
-
     public static boolean isLiar(final int base, final int n) {
         return !isWitness(base, n);
-    }
-
-    public static List<Integer> getLiars(final int n) {
-        final List<Integer> liars = IntStream.range(1, n).filter(a -> !isWitness(a, n)).boxed().collect(Collectors.toList());
-        log.debug("Liars = {}", liars);
-        return liars;
     }
 
     @Data

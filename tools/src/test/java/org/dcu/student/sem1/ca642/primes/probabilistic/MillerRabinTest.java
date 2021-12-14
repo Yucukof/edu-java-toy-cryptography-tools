@@ -5,12 +5,40 @@ import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.Test;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.dcu.student.sem1.ca642.primes.probabilistic.MillerRabin.*;
 
 public class MillerRabinTest {
 
+    @Test
+    public void given_non_prime_number_when_getAnyLiar_then_expect_valid_liar() {
+        final List<Integer> liars = MillerRabin.getLiars(91);
+        final Optional<Integer> liar = MillerRabin.getAnyLiar(91);
+
+        assertThat(liar)
+              .isPresent();
+
+        final int value = liar.get();
+        assertThat(liars)
+              .isNotNull()
+              .contains(value);
+    }
+
+    @Test
+    public void given_non_prime_number_when_getAnyWitness_then_expect_valid_witness() {
+        final List<Integer> witnesses = MillerRabin.getWitnesses(91);
+        final Optional<Integer> witness = MillerRabin.getAnyWitness(91);
+
+        assertThat(witness)
+              .isPresent();
+
+        final Integer value = witness.get();
+        assertThat(witnesses)
+              .isNotNull()
+              .contains(value);
+    }
     @Test
     public void given_non_prime_number_and_strong_liar_when_isWitness_then_expect_false() {
         AssertionsForClassTypes.assertThat(isWitness(14, 15))

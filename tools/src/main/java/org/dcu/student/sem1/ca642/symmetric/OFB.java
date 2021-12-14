@@ -12,6 +12,8 @@ public class OFB extends EncryptionBox {
     protected OFB(final Map<Block, Block> box, final String iv) {
         super(box);
         this.vector = Block.from(iv);
+        log.info("IV: {}", iv);
+
     }
 
     @Override
@@ -21,12 +23,18 @@ public class OFB extends EncryptionBox {
 
     @Override
     public Block translate(final Block plain) {
-        final Block v = map(vector);
-        log.debug("{} -> {}", vector, v);
-        this.vector = v;
 
+        log.debug("Translating vector...");
+        final Block v = map(vector);
+
+        log.debug("XORing vector & plain...");
         final Block cipher = v.xor(plain);
-        log.info("{} ⊕ {} = {}", v, plain, cipher);
+        log.debug("{} ⊕ {} = {}", v, plain, cipher);
+
+        log.debug("Updating vector...");
+        this.vector = v;
+        log.debug("V = {}", v);
+
         return cipher;
     }
 }

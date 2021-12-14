@@ -9,6 +9,8 @@ import org.dcu.student.sem1.ca642.modulus.fraction.Fraction;
 import org.dcu.student.sem1.ca642.modulus.inverse.Inverse;
 import org.dcu.student.sem1.ca642.modulus.product.Product;
 import org.dcu.student.sem1.ca642.modulus.roots.SquareRoot;
+import org.dcu.student.sem1.ca642.modulus.symbols.Symbol;
+import org.dcu.student.sem1.ca642.modulus.symbols.SymbolValue;
 
 import static org.dcu.student.sem1.ca642.primes.EulerTotient.phi;
 
@@ -20,7 +22,15 @@ public class Modulus {
     int modulus;
 
     public static Modulus from(final int value, final int modulus) {
-        return new Modulus(value, modulus);
+        int simpleValue = value % modulus;
+        if (simpleValue < value) {
+            log.info("{} == {} (mod {})", value, simpleValue, modulus);
+        }
+        if (simpleValue < 0) {
+            simpleValue = modulus + value;
+            log.info("{} == {} (mod {})", simpleValue, value, modulus);
+        }
+        return new Modulus(simpleValue, modulus);
     }
 
     public Modulus combine(final Modulus... moduluses) {
@@ -53,12 +63,23 @@ public class Modulus {
         return Product.from(modulus, factorsTimesValue);
     }
 
+    public SymbolValue getSymbolValue(){
+        return getSymbol()
+              .getValue();
+    }
+
+    public Symbol getSymbol(){
+        return Symbol.from(value,modulus);
+    }
+
     public SquareRoot getSquareRoot() {
-        return SquareRoot.from(value, modulus);
+        return SquareRoot
+              .from(value, modulus);
     }
 
     public boolean isPrimitiveRoot() {
-        return getOrder(value).isPrimitiveRoot();
+        return getOrder(value)
+              .isPrimitiveRoot();
     }
 
     public Order getOrder(final int value) {

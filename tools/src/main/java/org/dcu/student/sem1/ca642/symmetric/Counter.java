@@ -9,9 +9,10 @@ public class Counter extends EncryptionBox {
 
     private Block vector;
 
-    protected Counter(final Map<Block, Block> box, final String str) {
+    protected Counter(final Map<Block, Block> box, final String iv) {
         super(box);
-        this.vector = Block.from(str);
+        this.vector = Block.from(iv);
+        log.info("IV: {}", iv);
     }
 
     @Override
@@ -21,10 +22,18 @@ public class Counter extends EncryptionBox {
 
     @Override
     public Block translate(final Block plain) {
+
+        log.debug("Translating vector...");
         final Block v = map(vector);
+
+        log.debug("XORing vector & plain");
         final Block cipher = v.xor(plain);
-        log.info("{} ⊕ {} = {}", v, plain, cipher);
+        log.debug("{} ⊕ {} = {}", v, plain, cipher);
+
+        log.debug("Incrementing vector");
         this.vector = vector.increment();
+        log.debug("V = {} + 1 = {}", v, vector);
+
         return cipher;
     }
 }

@@ -55,7 +55,7 @@ public class Factor {
             prime = BruteForce.getNextPrime(prime);
             exponent = 0;
         }
-        log.info("Result = [{} = {}]", n, factors.stream().map(Objects::toString).collect(Collectors.joining("x")));
+        log.info("Result = [{} = {}]", n, factors.stream().map(Objects::toString).collect(Collectors.joining(" x ")));
         return factors;
     }
 

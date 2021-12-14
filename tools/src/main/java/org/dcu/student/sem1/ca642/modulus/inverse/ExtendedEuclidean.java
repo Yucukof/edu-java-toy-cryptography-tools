@@ -10,7 +10,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.dcu.student.sem1.ca642.modulus.EuclideanAlgorithm.isCoPrimes;
+import static org.dcu.student.sem1.ca642.primes.EuclideanAlgorithm.isCoPrimes;
 
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)

@@ -17,25 +17,30 @@ import static org.dcu.student.sem1.ca642.modulus.inverse.ExtendedEuclidean.posit
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ChineseRemainder {
 
-    public static int power(final int base, final int exponent, final int modulus) {
+    public static int compute(final int base, final int exponent, final int modulus) {
         log.info("Computing {}^{} (mod {})...", base, exponent, modulus);
 
         final List<Integer> factors = toNonPrimesFactors(modulus);
         log.debug("CRT Factors = {}", factors);
 
-        final Integer sum = factors.stream()
-              .map(factor -> power(factor, base, exponent, modulus))
+        final List<Integer> terms = factors.stream()
+              .map(factor -> compute(factor, base, exponent, modulus))
+              .collect(Collectors.toList());
+
+        final Integer sum = terms.stream()
               .reduce(Integer::sum)
               .orElseThrow(RuntimeException::new);
-        log.debug("CRT Sum = {}", sum);
+        log.info("{} = {}", terms.stream().map(Object::toString).collect(Collectors.joining(" + ")), sum);
 
         final int result = sum % modulus;
-        log.info("CRT Result = {}", result);
+        log.info("{} == {} (mod {})", sum, result, modulus);
+
+        log.info("CRT Result = [{}]", result);
 
         return result;
     }
 
-    private static int power(final Integer factor, final int base, final int exponent, final int modulus) {
+    private static int compute(final Integer factor, final int base, final int exponent, final int modulus) {
 
         log.debug("Computing term {}^{} (mod {})", base, exponent, factor);
 
@@ -48,8 +53,8 @@ public class ChineseRemainder {
 
     private static int a(final Integer factor, final int base, final int exponent) {
 
-        final int a = SquareAndMultiply.power(base, exponent, factor);
-        log.debug("a = {}^{} (mod {}) = {}", base, exponent, factor, a);
+        final int a = Exponentiation.resolve(base, exponent, factor);
+        log.info("a = {}^{} (mod {}) = {}", base, exponent, factor, a);
 
         return a;
     }
@@ -58,7 +63,7 @@ public class ChineseRemainder {
         log.debug("Computing N = modulus / factor...");
 
         final int bigN = modulus / factor;
-        log.debug("N = {}/{} = {}", modulus, factor, bigN);
+        log.info("N = {}/{} = {}", modulus, factor, bigN);
 
         return bigN;
     }
@@ -67,7 +72,7 @@ public class ChineseRemainder {
         log.debug("Computing y = N⁻¹ (mod factor)...");
 
         final int y = positiveInverse(bigN, factor);
-        log.debug("y == {}⁻¹ == {} (mod {})", bigN, y, factor);
+        log.info("y == {}⁻¹ == {} (mod {})", bigN, y, factor);
 
         return y;
     }
@@ -84,6 +89,8 @@ public class ChineseRemainder {
 
         final int result = product % modulus;
         log.debug("{} (mod {}) = {}", product, modulus, result);
+
+        log.info("{} x {} x {} (mod {}) = {}", a, bigN, y, modulus, result);
 
         return result;
     }
@@ -123,7 +130,7 @@ public class ChineseRemainder {
         log.debug("y = {}⁻¹ (mod {}) = {}", bigN, factor, y);
 
         final int result = multiplication(a, bigN, y, factor);
-        log.debug("{} x {} x {} (mod {}) = {}", a, bigN, y, modulus, result);
+        log.info("{} x {} x {} (mod {}) = {}", a, bigN, y, modulus, result);
         return result;
     }
 

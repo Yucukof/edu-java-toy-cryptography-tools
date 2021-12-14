@@ -1,4 +1,4 @@
-package org.dcu.student.sem1.ca642.modulus;
+package org.dcu.student.sem1.ca642.primes;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -26,7 +26,7 @@ public class EuclideanAlgorithm {
 
         while (low > 0) {
             final int remainder = high % low;
-            log.debug("{} - {} = {}", high, low, remainder);
+            log.debug("{} = {} x {} + {}", high, high / low, low, remainder);
             if (remainder < low) {
                 high = low;
             }

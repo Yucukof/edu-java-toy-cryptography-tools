@@ -18,6 +18,7 @@ public class ECB extends EncryptionBox {
 
     @Override
     public Block translate(final Block plain) {
+        log.debug("Translating block...");
         return map(plain);
     }
 }

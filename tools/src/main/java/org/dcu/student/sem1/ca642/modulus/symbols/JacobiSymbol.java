@@ -10,7 +10,8 @@ import static org.dcu.student.sem1.ca642.factorization.Naive.toPrimeFactors;
 import static org.dcu.student.sem1.ca642.primes.naive.BruteForce.isPrime;
 
 @Slf4j
-public enum JacobiSymbol {
+public enum JacobiSymbol implements SymbolValue {
+
     CONFIRMED_NON_RESIDUE(-1),
     POTENTIAL_RESIDUE(1),
     DIVISOR(0);
@@ -22,11 +23,15 @@ public enum JacobiSymbol {
     }
 
     public static JacobiSymbol resolve(final int a, final int p) {
+
         log.info("Resolving Jacobi's Symbol ({}/{})...", a, p);
+
         final int value = compute(a, p);
         log.debug("Jacobi's Value = [{}]", value);
+
         final JacobiSymbol symbol = resolve(value);
         log.info("Jacobi's Symbol = [{}]\n", symbol);
+
         return symbol;
     }
 
@@ -83,6 +88,7 @@ public enum JacobiSymbol {
      */
     private static int property1(final int a, final int n) {
         log.debug("> property 1");
+        log.debug("Simplifying dividend...");
         final int a_p = a % n;
         log.debug("{} == {} (mod {})", a, a_p, n);
         return compute(a_p, n);
@@ -99,14 +105,18 @@ public enum JacobiSymbol {
     private static Integer property2(final int a, final int n) {
         log.debug("> property 2");
         log.info("{} is not a prime", a);
+        log.debug("Simplifying dividend...");
         log.debug("> Decomposing {} into factors...", a);
         final List<Integer> factors = toPrimeFactors(a);
         log.debug("Factors = {}", factors);
 
-        return factors.stream()
+        final int symbol = factors.stream()
               .map(factor -> compute(factor, n))
               .reduce((s1, s2) -> s1 * s2)
               .orElse(1);
+
+        log.debug("({} / {}) = {}", a, n, symbol);
+        return symbol;
     }
 
     /**
@@ -121,13 +131,17 @@ public enum JacobiSymbol {
     private static int property3(final int a, final int n) {
         log.debug("> property 3");
         log.info("{} is not a prime", n);
+        log.debug("Simplifying divisor...");
         log.debug("> Decomposing {} into factors...", n);
         final List<Integer> factors = toPrimeFactors(n);
 
-        return factors.stream()
+        final int symbol = factors.stream()
               .map(factor -> compute(a, factor))
               .reduce((s1, s2) -> s1 * s2)
               .orElse(1);
+
+        log.debug("({} / {}) = {}", a, n, symbol);
+        return symbol;
     }
 
     /**
@@ -142,7 +156,6 @@ public enum JacobiSymbol {
     private static int property4(final int a, final int n) {
         log.debug("> property 4");
         log.debug("({} / {}) = {}", a, n, a);
-
         return a;
     }
 
@@ -156,13 +169,14 @@ public enum JacobiSymbol {
      */
     private static int property5(final int a, final int n) {
         log.debug("> property 5");
-
+        log.debug("Checking if (-1)^({}-1/2) ∈ {1}", n);
         log.debug("(n - 1) / 2");
         final int exponent = (n - 1) / 2;
         log.debug("({} - 1) / 2 = {}", n, exponent);
         final int symbol = MathUtils.power(-1, exponent);
         log.debug("(-1)^{}={}", exponent, symbol);
 
+        log.debug("({} / {}) = {}", a, n, symbol);
         return symbol;
     }
 
@@ -176,11 +190,13 @@ public enum JacobiSymbol {
      */
     private static int property6(final int a, final int n) {
         log.debug("> property 6");
+        log.debug("Checking if {} (mod {}) ∈ {1,{}}", a, n, n - 1);
         final int n_8 = n % 8;
         log.debug("{} (mod 8) = {}", n, n_8);
         final int symbol = (n_8 == 1 || n_8 == 7) ? 1 : -1;
         log.debug("{} -> {}", n_8, symbol);
 
+        log.debug("({} / {}) = {}", a, n, symbol);
         return symbol;
     }
 
@@ -194,7 +210,7 @@ public enum JacobiSymbol {
      */
     private static int property7(final int a, final int n) {
         log.debug("> property 7");
-        log.info("{} is a prime", a);
+        log.info("{} and {} are primes", a, n);
         log.debug("> Inverting fraction");
         final boolean expAEven = ((a - 1) / 2) % 2 == 0;
         final boolean expNEven = ((n - 1) / 2) % 2 == 0;
@@ -211,6 +227,11 @@ public enum JacobiSymbol {
               .filter(val -> val.matches(value))
               .findAny()
               .orElseThrow(RuntimeException::new);
+    }
+
+    @Override
+    public boolean isQuadraticResidue() {
+        return this == POTENTIAL_RESIDUE;
     }
 
     private boolean matches(final int value) {

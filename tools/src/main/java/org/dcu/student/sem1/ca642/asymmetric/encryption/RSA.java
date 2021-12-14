@@ -90,7 +90,9 @@ public class RSA {
 
         public int decrypt(final int c) {
             log.info("Decrypting {}", c);
-            return RSA.translate(c, d, n);
+            final int plain = RSA.translate(c, d, n);
+            log.info("Plaintext = [{}]", plain);
+            return plain;
         }
 
         public PublicKey getPublicKey() {
@@ -100,14 +102,19 @@ public class RSA {
             return publicKey;
         }
 
-        public int sign(final int message, final HashFunction hashFunction) {
-            final int hash = hashFunction.hash(message);
-            return encrypt(hash);
+        public int sign(final int m, final HashFunction hashFunction) {
+            log.info("Signing message {}", m);
+            final int hash = hashFunction.hash(m);
+            final int cipher = encrypt(hash);
+            log.debug("Cipher = [{}]", cipher);
+            return cipher;
         }
 
         public int encrypt(final int m) {
             log.info("Encrypting {}", m);
-            return RSA.translate(m, d, n);
+            final int cipher = RSA.translate(m, d, n);
+            log.info("Cipher = [{}]", cipher);
+            return cipher;
         }
 
         @Override

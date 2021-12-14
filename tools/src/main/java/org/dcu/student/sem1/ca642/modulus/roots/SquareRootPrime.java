@@ -3,12 +3,12 @@ package org.dcu.student.sem1.ca642.modulus.roots;
 import lombok.Data;
 import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
+import org.dcu.student.sem1.ca642.modulus.exponentiation.Exponentiation;
 import org.dcu.student.sem1.ca642.modulus.symbols.LegendreSymbol;
 
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.dcu.student.sem1.ca642.modulus.exponentiation.SquareAndMultiply.power;
 import static org.dcu.student.sem1.ca642.primes.naive.BruteForce.isPrime;
 
 @Slf4j
@@ -72,7 +72,7 @@ public class SquareRootPrime implements SquareRoot {
 
         final int exponent = (p + 1) / 4;
         log.debug("({} + 1) / 4 = {}", p, exponent);
-        final int root = power(a, exponent, p);
+        final int root = Exponentiation.compute(a, exponent, p);
         log.debug("{}^(({} + 1) / 4) == {} (mod {})", a, p, root, p);
 
         return toPair(root);
@@ -83,7 +83,7 @@ public class SquareRootPrime implements SquareRoot {
         log.debug("Computing a^((p-1)/4) == 1 (mod 4)");
         final int exponent = (p - 1) / 4;
         log.debug("({} - 1) / 4 = {}", p, exponent);
-        final int clue = power(a, exponent, p);
+        final int clue = Exponentiation.compute(a, exponent, p);
         log.debug("{}^(({}-1)/4) (mod {}) == {}", a, p, p, clue);
 
         switch (clue) {
@@ -105,7 +105,7 @@ public class SquareRootPrime implements SquareRoot {
 
         final int exponent = (modulus + 3) / 8;
         log.debug("({} + 3) / 8 = {}", modulus, exponent);
-        final int root = power(value, exponent, modulus);
+        final int root = Exponentiation.compute(value, exponent, modulus);
         log.debug(" {}^(({}+1)/4) == {} (mod {})", value, modulus, root, modulus);
 
         return toPair(root);
@@ -118,7 +118,7 @@ public class SquareRootPrime implements SquareRoot {
         final int exponent = (modulus - 5) / 8;
         log.debug("({} - 5) / 8 = {}", modulus, exponent);
 
-        final int a_exp = power(value, exponent, modulus);
+        final int a_exp = Exponentiation.compute(value, exponent, modulus);
         log.debug("(4 x {})^{} (mod {}) = {}", 4 * value, exponent, modulus, a_exp);
 
         final int root = (2 * value * a_exp) % modulus;

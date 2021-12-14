@@ -9,7 +9,7 @@ import org.dcu.student.sem1.ca642.asymmetric.encryption.ElGamal;
 import org.dcu.student.sem1.ca642.modulus.exponentiation.Exponentiation;
 import org.dcu.student.sem1.ca642.modulus.fraction.Fraction;
 
-import static org.dcu.student.sem1.ca642.modulus.EuclideanAlgorithm.gcd;
+import static org.dcu.student.sem1.ca642.primes.EuclideanAlgorithm.gcd;
 import static org.dcu.student.sem1.ca642.modulus.inverse.ExtendedEuclidean.inverse;
 
 @Slf4j

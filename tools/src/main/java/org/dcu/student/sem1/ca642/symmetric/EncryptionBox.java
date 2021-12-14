@@ -36,7 +36,7 @@ public abstract class EncryptionBox {
         log.debug("Blocks = {}", blocks);
 
         final String plain = reprocess(blocks);
-        log.info("Plaintext = [{}]", plain);
+        log.info("Plaintext = [{}]\n", plain);
         return plain;
     }
 
@@ -52,7 +52,9 @@ public abstract class EncryptionBox {
 
     private String reprocess(final List<Block> blocks) {
         return blocks.stream()
+              .peek(block -> log.debug("Input: [{}]", block))
               .map(this::revert)
+              .peek(block -> log.debug("Output: [{}]\n", block))
               .map(Block::getValue)
               .collect(Collectors.joining());
     }
@@ -87,16 +89,22 @@ public abstract class EncryptionBox {
         final List<Block> blocks = Block.toBlocks(plain, getBlockSize());
         log.debug("Blocks = {}", blocks);
 
-        final String cipher = process(blocks);
-        log.info("Ciphertext = [{}]", cipher);
+        final List<Block> encryptedBlocks = process(blocks);
+        log.info("Encrypted blocks = {}", encryptedBlocks);
+
+        final String cipher = Block.toBlock(encryptedBlocks);
+        log.info("Ciphertext = [{}]\n", cipher);
+
         return cipher;
     }
 
-    private String process(final List<Block> blocks) {
+    private List<Block> process(final List<Block> blocks) {
+        log.debug("Processing blocks...\n");
         return blocks.stream()
+              .peek(block -> log.debug("Input: [{}]", block))
               .map(this::translate)
-              .map(Block::getValue)
-              .collect(Collectors.joining());
+              .peek(block -> log.debug("Output: [{}]\n", block))
+              .collect(Collectors.toList());
     }
 
     public abstract Block translate(final Block plain);

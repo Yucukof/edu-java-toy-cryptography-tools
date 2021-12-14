@@ -21,13 +21,6 @@ public class Exponentiation {
               .resolve();
     }
 
-    public int resolve() {
-        log.info("Resolving {}^{} (mod {})", base, exponent, modulus);
-        return hasNegativeExponent()
-              ? resolveNegativeExponent()
-              : resolvePositiveExponent();
-    }
-
     public static Exponentiation from(final int base, final int exponent, final int modulus) {
         return builder()
               .base(base)
@@ -36,8 +29,57 @@ public class Exponentiation {
               .build();
     }
 
+    public static int resolve(final int base, final int exponent, final int modulus) {
+
+        if (base == 0) {
+            log.info("{}^{} (mod {}) = [0]", base, exponent, modulus);
+            return 0;
+        }
+        if (base == 1 || exponent == 0) {
+            log.info("{}^{} (mod {}) = [1]", base, exponent, modulus);
+            return 1;
+        }
+        if (exponent == 1) {
+            final int result = base % modulus;
+            log.info("{}^{} (mod {}) = [{}]", base, exponent, modulus, result);
+            return result;
+        }
+
+        final int simpleBase = base % modulus;
+        if (simpleBase < base) {
+            log.debug("Simplifying base...");
+            log.debug("{} == {} (mod {})", base, simpleBase, modulus);
+            log.debug("New base = {}", simpleBase);
+            return resolve(simpleBase, exponent, modulus);
+        }
+
+        if (exponent > modulus || exponent < 0) {
+            log.debug("Simplifying exponent...");
+            final int simpleExponent = EulerTheorem.apply(exponent, modulus);
+            log.debug("New exponent = {}", simpleExponent);
+            return resolve(simpleBase, simpleExponent, modulus);
+        }
+
+        if (exponent == modulus && isPrime(modulus)) {
+            log.debug("Invoking Fermat's Little Theorem...");
+            log.debug("{}^{} (mod {}) == {} (mod {})", simpleBase, exponent, modulus, base, modulus);
+            return simpleBase;
+        }
+
+        return isPrime(modulus)
+               ? SquareAndMultiply.compute(base, exponent, modulus)
+               : ChineseRemainder.compute(base, exponent, modulus);
+    }
+
     public boolean hasNegativeExponent() {
         return exponent < 0;
+    }
+
+    public int resolve() {
+        log.info("Resolving {}^{} (mod {})", base, exponent, modulus);
+        return hasNegativeExponent()
+               ? resolveNegativeExponent()
+               : resolvePositiveExponent();
     }
 
     private int resolveNegativeExponent() {
@@ -47,16 +89,6 @@ public class Exponentiation {
 
     private int resolvePositiveExponent() {
         return resolve(base, exponent, modulus);
-    }
-
-    public static int resolve(final int base, final int exponent, final int modulus) {
-        return isPrime(modulus)
-              ? SquareAndMultiply.power(base, exponent, modulus)
-              : ChineseRemainder.power(base, exponent, modulus);
-    }
-
-    public boolean hasPrimeModulus() {
-        return isPrime(modulus);
     }
 
     @Override

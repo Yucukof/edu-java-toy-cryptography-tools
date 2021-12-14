@@ -7,7 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static org.dcu.student.sem1.ca642.modulus.EuclideanAlgorithm.gcd;
+import static org.dcu.student.sem1.ca642.primes.EuclideanAlgorithm.gcd;
 import static org.dcu.student.sem1.ca642.primes.naive.BruteForce.isPrime;
 
 @Slf4j
@@ -41,16 +41,16 @@ public class PollardRho {
             throw new IllegalArgumentException(String.format("%s is a prime number!", n));
         }
 
-        final int factor = walk(x0, c, n);
-        if (factor == 0) {
+        final Optional<Integer> optFactor = walk(x0, c, n);
+        if (!optFactor.isPresent()) {
             return Collections.emptyList();
         }
-        final int complement = n / factor;
-
-        return Arrays.asList(factor, complement);
+        final Integer fact = optFactor.get();
+        final int complement = n / fact;
+        return Arrays.asList(fact, complement);
     }
 
-    private static int walk(final int x0, final int c, final int n) {
+    private static Optional<Integer> walk(final int x0, final int c, final int n) {
 
         int previous = x0;
         int next = x0;
@@ -64,11 +64,13 @@ public class PollardRho {
             current = next(next, c, n);
             next = next(current, c, n);
             final int value = (n + next - previous) % n;
-            if (value == 0) break;
-            d = gcd(value, n);
-            log.debug("{} - {} (mod {}) = {}", next, previous, n, d);
-        } while (d == 1);
-        return d;
+            log.debug("d = {} - {} (mod {}) = {}", next, previous, n, value);
+            if (value != 0) {
+                d = gcd(value, n);
+                log.debug("{} - {} (mod {}) = {}", next, previous, n, d);
+            }
+        } while (d == 0 || d == 1);
+        return Optional.ofNullable(d);
     }
 
     private static int next(final int x, final int c, final int n) {
